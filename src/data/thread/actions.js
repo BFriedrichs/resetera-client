@@ -29,3 +29,30 @@ const fetchThreadLinksSuccess = (forumId, threads) => ({
 const fetchThreadLinksFailure = () => ({
   type: ACTIONS.FETCH_THREAD_LINKS_FAILURE
 });
+
+export const fetchThread = threadId => {
+  return dispatch => {
+    dispatch(fetchThreadRequest());
+
+    return request(ENDPOINTS.THREAD + `/${threadId}`)
+      .then(data => {
+        dispatch(fetchThreadSuccess(threadId, data.payload));
+      })
+      .catch(err => {
+        dispatch(fetchThreadFailure());
+      });
+  };
+};
+
+const fetchThreadRequest = () => ({
+  type: ACTIONS.FETCH_THREAD_REQUEST
+});
+
+const fetchThreadSuccess = (threadId, { forumId, posts, meta }) => ({
+  type: ACTIONS.FETCH_THREAD_SUCCESS,
+  data: { threadId, forumId, posts, meta }
+});
+
+const fetchThreadFailure = () => ({
+  type: ACTIONS.FETCH_THREAD_FAILURE
+});

@@ -5,9 +5,10 @@ const initialState = {
   isFetching: false
 };
 
-const forum = (state = initialState, action) => {
+const thread = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.FETCH_THREAD_LINKS_REQUEST:
+    case ACTIONS.FETCH_THREAD_REQUEST:
       return {
         ...state,
         isFetching: true
@@ -17,21 +18,37 @@ const forum = (state = initialState, action) => {
         ...state,
         threads: {
           ...state.threads,
-          [action.data.forumId]: [
-            ...(state.threads[action.data.forumId] || []),
-            ...action.data.threads
-          ]
+          [action.data.forumId]: {
+            ...(state.threads[action.data.forumId] || {}),
+            ...action.data.threads.reduce((r, d) => {
+              r[d.id] = d;
+              return r;
+            }, {})
+          }
         },
         isFetching: false
       };
     case ACTIONS.FETCH_THREAD_LINKS_FAILURE:
+    case ACTIONS.FETCH_THREAD_FAILURE:
       return {
         ...state,
         isFetching: false
+      };
+    case ACTIONS.FETCH_THREAD_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        threads: {
+          ...state.threads,
+          [action.data.forumId]: {
+            ...(state.threads[action.data.forumId] || {}),
+            [action.data.threadId]: action.data.meta
+          }
+        }
       };
     default:
       return state;
   }
 };
 
-export default forum;
+export default thread;

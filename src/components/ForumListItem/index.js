@@ -1,24 +1,16 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { ListItem } from "react-native-material-ui";
 import { withNavigation } from "react-navigation";
 
 import asListItem from "utils/list-item-wrapper";
 
-const listStyle = {
-  container: {
-    height: 75
-  }
-};
+import ListItem from "components/ListItem";
 
 const ForumListItem = ({ navigation, item }) => (
   <ListItem
     divider
-    centerElement={{
-      primaryText: item.name
-    }}
+    title={item.name}
     onPress={() => navigation.navigate("Forum", { forumId: item.id })}
-    style={listStyle}
   />
 );
 

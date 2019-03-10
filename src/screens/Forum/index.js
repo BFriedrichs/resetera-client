@@ -10,8 +10,7 @@ import ThreadListItem from "components/ThreadListItem";
 
 class Forum extends React.Component {
   componentDidMount() {
-    const { navigation } = this.props;
-    const forumId = navigation.getParam("forumId");
+    const { forumId } = this.props;
     this.props.fetchThreadLinks(forumId);
   }
 
@@ -20,13 +19,15 @@ class Forum extends React.Component {
   }
 
   render() {
-    const { threads } = this.props;
+    const { threads, forumName } = this.props;
     return (
       <View>
         <FlatList
           data={threads}
           keyExtractor={this._keyExtractor}
-          renderItem={ThreadListItem}
+          renderItem={({ item }) => (
+            <ThreadListItem item={item} forumName={forumName} />
+          )}
         />
       </View>
     );
@@ -36,7 +37,9 @@ class Forum extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const forumId = ownProps.navigation.getParam("forumId");
   return {
-    threads: selectThreadsFromForum(forumId)(state)
+    threads: selectThreadsFromForum(forumId)(state),
+    forumId: forumId,
+    forumName: state.forum.forums[forumId].name
   };
 };
 

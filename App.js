@@ -4,10 +4,11 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { COLOR, ThemeContext, getTheme } from "react-native-material-ui";
 
 import Home from "./src/screens/Home";
 import Forum from "./src/screens/Forum";
+import Thread from "./src/screens/Thread";
+
 import reducers from "./src/data";
 
 const UITheme = {
@@ -24,7 +25,8 @@ const store = createStore(
 const AppNavigator = createStackNavigator(
   {
     Home: Home,
-    Forum: Forum
+    Forum: Forum,
+    Thread: Thread
   },
   {
     initialRouteName: "Home",
@@ -46,9 +48,7 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <ThemeContext.Provider value={getTheme(UITheme)}>
-          <AppContainer />
-        </ThemeContext.Provider>
+        <AppContainer />
       </Provider>
     );
   }

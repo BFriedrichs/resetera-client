@@ -32,7 +32,7 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  forums: state.forum.forums
+  forums: Object.values(state.forum.forums)
 });
 const mapDispatchToProps = dispatch => ({
   fetchForumLinks: bindActionCreators(fetchForumLinks, dispatch)

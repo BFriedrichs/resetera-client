@@ -1,7 +1,7 @@
 import { ACTIONS } from "./constants";
 
 const initialState = {
-  forums: [],
+  forums: {},
   isFetching: false
 };
 
@@ -15,7 +15,13 @@ const forum = (state = initialState, action) => {
     case ACTIONS.FETCH_FORUM_LINKS_SUCCESS:
       return {
         ...state,
-        forums: [...action.data],
+        forums: {
+          ...state.forums,
+          ...action.data.reduce((r, d) => {
+            r[d.id] = d;
+            return r;
+          }, {})
+        },
         isFetching: false
       };
     case ACTIONS.FETCH_FORUM_LINKS_FAILURE:
