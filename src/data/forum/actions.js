@@ -12,6 +12,7 @@ export const fetchForumLinks = () => {
         dispatch(fetchForumLinksSuccess(data.payload));
       })
       .catch(err => {
+        console.log(err);
         dispatch(fetchForumLinksFailure());
       });
   };

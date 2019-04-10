@@ -1,4 +1,6 @@
+import produce from "immer";
 import { ACTIONS } from "./constants";
+import { ACTIONS as THREAD_ACTIONS } from "data/thread/constants";
 
 const initialState = {
   forums: {},
@@ -6,32 +8,26 @@ const initialState = {
 };
 
 const forum = (state = initialState, action) => {
-  switch (action.type) {
-    case ACTIONS.FETCH_FORUM_LINKS_REQUEST:
-      return {
-        ...state,
-        isFetching: true
-      };
-    case ACTIONS.FETCH_FORUM_LINKS_SUCCESS:
-      return {
-        ...state,
-        forums: {
-          ...state.forums,
-          ...action.data.reduce((r, d) => {
-            r[d.id] = d;
-            return r;
-          }, {})
-        },
-        isFetching: false
-      };
-    case ACTIONS.FETCH_FORUM_LINKS_FAILURE:
-      return {
-        ...state,
-        isFetching: false
-      };
-    default:
-      return state;
-  }
+  return produce(state, draft => {
+    const forumId = action.data && action.data.forumId;
+    switch (action.type) {
+      case ACTIONS.FETCH_FORUM_LINKS_REQUEST:
+        draft.isFetching = true;
+        break;
+      case ACTIONS.FETCH_FORUM_LINKS_SUCCESS:
+        action.data.forEach(f => {
+          draft.forums[f.id] = f;
+        });
+        draft.isFetching = false;
+        break;
+      case ACTIONS.FETCH_FORUM_LINKS_FAILURE:
+        draft.isFetching = false;
+        break;
+      case THREAD_ACTIONS.FETCH_THREAD_LINKS_SUCCESS:
+        draft.forums[forumId].meta.pages = action.data.meta.pages;
+        break;
+    }
+  });
 };
 
 export default forum;

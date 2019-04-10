@@ -6,13 +6,14 @@ import asListItem from "utils/list-item-wrapper";
 
 import ListItem from "components/ListItem";
 
-const ThreadListItem = ({ navigation, item, forumName }) => (
+const ThreadListItem = ({ navigation, forumName, item, ...props }) => (
   <ListItem
     divider
-    title={item.name}
+    title={item.meta.name}
     onPress={() =>
       navigation.push("Thread", { threadId: item.id, title: forumName })
     }
+    {...props}
   />
 );
 

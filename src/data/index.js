@@ -1,13 +1,11 @@
 import { combineReducers } from "redux";
 
-import settings from "./settings/reducer";
+import other from "./other/reducer";
 import forum from "./forum/reducer";
 import thread from "./thread/reducer";
-import post from "./post/reducer";
 
 export default combineReducers({
-  settings,
+  other,
   forum,
-  thread,
-  post
+  thread
 });

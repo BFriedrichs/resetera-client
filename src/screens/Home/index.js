@@ -1,15 +1,41 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Image } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { ActivityIndicator, withTheme } from "react-native-paper";
 
+import styled from "styled-components/native";
 import { fetchForumLinks } from "data/forum/actions";
 
 import ForumListItem from "components/ForumListItem";
+import Loader from "components/Loader";
+
+import { LogoWhite } from "assets";
+
+const HomeBackground = styled(View)`
+  display: flex;
+  flex: 1;
+  background-color: ${props => props.theme.background || "#fff"};
+`;
 
 class Home extends React.Component {
-  componentDidMount() {
-    this.props.fetchForumLinks();
+  static navigationOptions = ({ navigation }) => ({
+    headerTitle: (
+      <Image resizeMode="contain" style={{ width: 110 }} source={LogoWhite} />
+    )
+  });
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      initialFetch: false
+    };
+  }
+
+  async componentDidMount() {
+    await this.props.fetchForumLinks();
+    this.setState({ initialFetch: true });
   }
 
   _keyExtractor(forum) {
@@ -18,15 +44,19 @@ class Home extends React.Component {
 
   render() {
     const { forums } = this.props;
-
+    const { initialFetch } = this.state;
     return (
-      <View>
-        <FlatList
-          data={forums}
-          keyExtractor={this._keyExtractor}
-          renderItem={ForumListItem}
-        />
-      </View>
+      <HomeBackground>
+        {initialFetch ? (
+          <FlatList
+            data={forums}
+            keyExtractor={this._keyExtractor}
+            renderItem={ForumListItem}
+          />
+        ) : (
+          <Loader size="large" />
+        )}
+      </HomeBackground>
     );
   }
 }
