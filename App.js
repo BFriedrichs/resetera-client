@@ -9,6 +9,9 @@ import {
   DefaultTheme
 } from "react-native-paper";
 import { ThemeProvider } from "styled-components/native";
+
+import { StatusBar } from "react-native";
+
 import Color from "utils/color-helper";
 
 import Home from "./src/screens/Home";
@@ -18,6 +21,8 @@ import Thread from "./src/screens/Thread";
 import ThemeToggle from "components/ThemeToggle";
 
 import reducers from "./src/data";
+
+StatusBar.setBarStyle("light-content");
 
 const UITheme = {
   palette: {
