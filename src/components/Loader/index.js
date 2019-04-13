@@ -7,6 +7,7 @@ const LoadingWrapper = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+  margin: 32px;
 `;
 
 const Loader = ({ wrapperProps, ...props }) => (

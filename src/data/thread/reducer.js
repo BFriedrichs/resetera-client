@@ -5,7 +5,8 @@ import { ACTIONS } from "./constants";
 const initialState = {
   threads: {},
   idMapped: {},
-  isFetching: false
+  isFetching: false,
+  imageCache: {}
 };
 
 const thread = (state = initialState, action) => {
@@ -22,8 +23,9 @@ const thread = (state = initialState, action) => {
         draft.isFetching = true;
         break;
       case ACTIONS.FETCH_THREAD_LINKS_SUCCESS:
-        ensure(draft.threads, forumId, []);
-        action.data.threads.forEach(t => {
+        ensure(draft.threads, forumId, {});
+        action.data.threads.forEach((t, i) => {
+          t.order = i;
           t.page = page;
           draft.threads[forumId][t.id] = t;
           draft.idMapped[t.id] = forumId;
@@ -52,16 +54,24 @@ const thread = (state = initialState, action) => {
         action.data.posts.forEach(p => {
           p["page"] = page;
         });
-        draft.threads[forumId][threadId].posts.push(...action.data.posts);
+        const ids = draft.threads[forumId][threadId].posts.map(e => e.id);
+
+        draft.threads[forumId][threadId].posts.push(
+          ...action.data.posts.filter(e => !(e.id in ids))
+        );
         draft.threads[forumId][threadId].meta = {
           ...action.data.meta
         };
+        draft.threads[forumId][threadId].poll = action.data.poll;
         draft.threads[forumId][threadId].id = id;
         draft.idMapped[threadId] = forumId;
         draft.isFetching = false;
         break;
       case ACTIONS.FETCH_POSTS_FAILURE:
         draft.isFetching = false;
+        break;
+      case ACTIONS.ADD_TO_IMAGE_CACHE:
+        draft.imageCache[action.data.url] = { size: action.data.size };
         break;
     }
   });

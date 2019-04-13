@@ -6,7 +6,6 @@ import { LinearGradient } from "expo";
 
 import asListItem from "utils/list-item-wrapper";
 
-import ListItem from "components/ListItem";
 import BetterCard from "components/BetterCard";
 import { H2, H4 } from "components/Title";
 import { Forum } from "assets";

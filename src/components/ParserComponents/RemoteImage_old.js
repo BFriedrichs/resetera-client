@@ -14,7 +14,7 @@ import styled from "styled-components/native";
 import { WebBrowser } from "expo";
 import { ActivityIndicator } from "react-native-paper";
 
-import { setThreadScrollable, addToImageCache } from "data/other/actions";
+import { addToImageCache } from "data/thread/actions";
 import PeekView from "components/PeekView";
 import BlurOverlay from "components/BlurOverlay";
 
@@ -188,7 +188,7 @@ class RemoteImage extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { src } = ownProps;
-  const cache = state.other.imageCache[src];
+  const cache = state.thread.imageCache[src];
   return {
     isCached: !!cache,
     cachedImage: cache
@@ -196,7 +196,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  setThreadScrollable: bindActionCreators(setThreadScrollable, dispatch),
   addToImageCache: bindActionCreators(addToImageCache, dispatch)
 });
 

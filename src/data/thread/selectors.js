@@ -7,7 +7,9 @@ export const selectThreadsFromForum = (forumId, page = 1) => state =>
   createSelector(
     threadSelector,
     threads => Object.values(threads[forumId] || [])
-  )(state).filter(thread => thread.page == page);
+  )(state)
+    .filter(thread => thread.page == page)
+    .sort((a, b) => a.order - b.order);
 
 export const getForumIdFromThreadId = threadId =>
   createSelector(

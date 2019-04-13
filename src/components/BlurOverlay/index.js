@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Modal, Dimensions } from "react-native";
+import { View, Modal, Dimensions, KeyboardAvoidingView } from "react-native";
 import { BlurView } from "expo";
 import styled from "styled-components/native";
 
@@ -42,18 +42,23 @@ class BlurOverlay extends React.PureComponent {
               }}
             />
           </BlurView>
-          <Centered
-            style={{
-              width: dims.width,
-              height: dims.height
-            }}
+          <KeyboardAvoidingView
+            behavior="position"
+            keyboardVerticalOffset={-200}
           >
-            {contentInCard ? (
-              <BetterCard title="Pick a page">{children}</BetterCard>
-            ) : (
-              children
-            )}
-          </Centered>
+            <Centered
+              style={{
+                width: dims.width,
+                height: dims.height
+              }}
+            >
+              {contentInCard ? (
+                <BetterCard title="Pick a page">{children}</BetterCard>
+              ) : (
+                children
+              )}
+            </Centered>
+          </KeyboardAvoidingView>
         </View>
       </Modal>
     );

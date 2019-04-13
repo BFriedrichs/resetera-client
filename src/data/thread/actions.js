@@ -51,9 +51,9 @@ const fetchThreadRequest = threadId => ({
   data: { threadId }
 });
 
-const fetchThreadSuccess = (threadId, { forumId, posts, meta }) => ({
+const fetchThreadSuccess = (threadId, { forumId, posts, meta, poll }) => ({
   type: ACTIONS.FETCH_THREAD_SUCCESS,
-  data: { threadId, forumId, posts, meta }
+  data: { threadId, forumId, posts, meta, poll }
 });
 
 const fetchThreadFailure = () => ({
@@ -86,4 +86,9 @@ const fetchPostsSuccess = (threadId, payload) => ({
 
 const fetchPostsFailure = () => ({
   type: ACTIONS.FETCH_POSTS_FAILURE
+});
+
+export const addToImageCache = (url, size) => ({
+  type: ACTIONS.ADD_TO_IMAGE_CACHE,
+  data: { url, size }
 });

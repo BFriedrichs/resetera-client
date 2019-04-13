@@ -10,19 +10,19 @@ import {
 } from "react-native-paper";
 import { ThemeProvider } from "styled-components/native";
 
-import { StatusBar } from "react-native";
-
 import Color from "utils/color-helper";
 
 import Home from "./src/screens/Home";
 import Forum from "./src/screens/Forum";
 import Thread from "./src/screens/Thread";
-
+import SetupAndLoad from "./src/screens/SetupAndLoad";
 import ThemeToggle from "components/ThemeToggle";
 
-import reducers from "./src/data";
+import reducers from "data";
+import { initialState } from "data/user/reducer";
 
-StatusBar.setBarStyle("light-content");
+import sessionMiddleware from "utils/session-middleware";
+import { loadData } from "utils/persist";
 
 const UITheme = {
   palette: {
@@ -40,11 +40,6 @@ const UITheme = {
     text: Color("#f1f1f1")
   }
 };
-
-const store = createStore(
-  reducers,
-  composeWithDevTools(applyMiddleware(thunkMiddleware))
-);
 
 const AppNavigator = createStackNavigator(
   {
@@ -79,16 +74,41 @@ const ThemeConnector = ({ theme }) => (
 );
 
 const mapThemeToProps = state => ({
-  theme: UITheme[state.other.settings.darkMode ? "dark" : "light"]
+  theme: UITheme[state.user.darkMode ? "dark" : "light"]
 });
 const ConnectedThemeConnector = connect(mapThemeToProps)(ThemeConnector);
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loadedStore: false,
+      preloadDone: false
+    };
+
+    loadData("settings").then(result => {
+      this.store = createStore(
+        reducers,
+        { user: { ...initialState, ...result } },
+        composeWithDevTools(applyMiddleware(thunkMiddleware, sessionMiddleware))
+      );
+      this.setState({ loadedStore: true });
+    });
+  }
+
+  setDone() {
+    this.setState({ preloadDone: true });
+  }
+
   render() {
-    return (
-      <Provider store={store}>
+    const { loadedStore, preloadDone } = this.state;
+    return loadedStore && preloadDone ? (
+      <Provider store={this.store}>
         <ConnectedThemeConnector />
       </Provider>
+    ) : (
+      <SetupAndLoad cb={this.setDone.bind(this)} />
     );
   }
 }

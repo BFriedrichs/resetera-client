@@ -20,6 +20,11 @@ class _BetterColor {
   toString() {
     return this.c.hex();
   }
+
+  adjust(ratio) {
+    const newCol = this.isDark() ? this.c.lighten(ratio) : this.c.darken(ratio);
+    return new _BetterColor(newCol);
+  }
 }
 
 for (var x in Color.prototype) {

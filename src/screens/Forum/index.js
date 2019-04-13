@@ -7,8 +7,6 @@ import styled from "styled-components/native";
 import { fetchThreadLinks } from "data/thread/actions";
 import { selectThreadsFromForum } from "data/thread/selectors";
 
-import { ActivityIndicator } from "react-native-paper";
-
 import ThreadListItem from "components/ThreadListItem";
 import Pagination from "components/Pagination";
 import { H1 } from "components/Title";
@@ -25,6 +23,11 @@ const ForumBackground = styled.View`
 const Title = styled(H1)`
   margin: 16px;
   color: ${props => props.theme.text};
+`;
+
+const BottomPadding = styled.View`
+  width: 100%;
+  height: 24px;
 `;
 
 class Forum extends React.Component {
@@ -61,7 +64,7 @@ class Forum extends React.Component {
   }
 
   _keyExtractor(thread) {
-    return thread.id;
+    return `${thread.id}`;
   }
 
   loadPage(page) {
@@ -89,9 +92,15 @@ class Forum extends React.Component {
               }
             ]}
             keyExtractor={this._keyExtractor}
-            renderItem={({ item }) =>
-              item.__empty ? null : (
-                <ThreadListItem forumName={forum.meta.name} item={item} />
+            renderItem={({ item, index }) =>
+              item.__empty ? (
+                <BottomPadding />
+              ) : (
+                <ThreadListItem
+                  forumName={forum.meta.name}
+                  item={item}
+                  divider={index !== threads.length - 1}
+                />
               )
             }
             stickySectionHeadersEnabled={false}
@@ -101,12 +110,10 @@ class Forum extends React.Component {
                   {!onlyNav ? <Title>{title}</Title> : null}
                   <Pagination
                     loadPage={this.loadPage.bind(this)}
-                    currPage={page}
+                    page={page}
                     pages={forum.meta.pages}
                   />
-                  {fetching ? (
-                    <ActivityIndicator size="large" animating={true} />
-                  ) : null}
+                  {fetching ? <Loader size="large" /> : null}
                 </View>
               )
             }

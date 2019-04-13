@@ -39,7 +39,7 @@ class Home extends React.Component {
   }
 
   _keyExtractor(forum) {
-    return forum.id;
+    return `${forum.id}`;
   }
 
   render() {
@@ -52,6 +52,7 @@ class Home extends React.Component {
             data={forums}
             keyExtractor={this._keyExtractor}
             renderItem={ForumListItem}
+            contentContainerStyle={{ paddingTop: 8, paddingBottom: 16 }}
           />
         ) : (
           <Loader size="large" />

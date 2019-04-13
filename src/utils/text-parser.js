@@ -1,19 +1,21 @@
 import React from "react";
-import { View, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import {
   DefaultText,
   Bold,
   Block,
   BlockTitle,
   Link,
-  RemoteImage
+  RemoteImage,
+  IFrame,
+  Spoiler
 } from "components/ParserComponents";
 
 const parseText = text => {
   return text.map((e, i) => {
     switch (e.type) {
       case "text":
-        return <DefaultText key={i}>{e.content}</DefaultText>;
+        return <Text key={i}>{e.content}</Text>;
         break;
       case "textgroup":
         return <DefaultText key={i}>{parseText(e.content)}</DefaultText>;
@@ -21,8 +23,14 @@ const parseText = text => {
       case "image":
         return <RemoteImage key={i} src={e.attrs.src} />;
         break;
+      case "iframe":
+        return <IFrame key={i} {...e.attrs} />;
+        break;
       case "bold":
         return <Bold key={i}>{parseText(e.content)}</Bold>;
+        break;
+      case "spoiler":
+        return <Spoiler key={i}>{parseText(e.content)}</Spoiler>;
         break;
       case "linkto":
         const { type, ...additionalAttrs } = e.attrs;

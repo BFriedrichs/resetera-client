@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Picker } from "react-native";
 import styled from "styled-components/native";
-import { Button, Card } from "react-native-paper";
+import { Button, Card, TextInput } from "react-native-paper";
 
 import BlurOverlay from "components/BlurOverlay";
 
 const PaginationContainer = styled(Card)`
-  margin: 0 8px 24px 8px;
+  margin: 0 8px 0 8px;
   border-radius: 16px;
   padding: 0 0 16px 0;
   background-color: ${props => props.theme.background.lighten(0.5)};
@@ -23,38 +23,46 @@ const ButtonWidth = styled(Button).attrs(props => ({
   min-width: 45px;
 `;
 
+const Input = styled(TextInput)`
+  position: absolute;
+  left: 8px;
+  width: 100%;
+  bottom: 50px;
+`;
+
 class Pagination extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       pickerVisible: false,
-      pickerValue: props.page
+      pickerValue: props.page,
+      text: ""
     };
   }
 
   render() {
-    const { loadPage, currPage, pages } = this.props;
+    const { loadPage, page, pages, style } = this.props;
     if (pages == 1) return null;
     const nav = [
       {
-        page: currPage - 1,
-        disabled: currPage == 1,
+        page: parseInt(page) - 1,
+        disabled: page == 1,
         label: "<"
       },
-      { label: `${currPage}`, page: currPage },
+      { label: `${page}`, page: page },
       {
-        page: currPage + 1,
-        disabled: currPage == pages,
+        page: parseInt(page) + 1,
+        disabled: page == pages,
         label: ">"
       },
-      { page: pages, disabled: currPage == pages, label: ">>" },
+      { page: pages, disabled: page == pages, label: ">>" },
       { label: "...", page: -1 }
     ];
 
     const { pickerVisible, pickerValue } = this.state;
     return (
-      <PaginationContainer>
+      <PaginationContainer style={style}>
         <ContentContainer>
           {nav.map((r, i) => (
             <ButtonWidth
@@ -88,10 +96,25 @@ class Pagination extends React.PureComponent {
             >
               {[...new Array(pages)].map((_, p) => {
                 return (
-                  <Picker.Item key={p} label={`${p + 1}`} value={`${p + 1}`} />
+                  <Picker.Item
+                    key={p}
+                    label={`${p + 1}`}
+                    value={`${parseInt(p) + 1}`}
+                  />
                 );
               })}
             </Picker>
+            <Input
+              numberOfLines={1}
+              keyboardType="numeric"
+              label="Page"
+              value={`${pickerValue}`}
+              onChangeText={text =>
+                this.setState({
+                  pickerValue: Math.max(1, Math.min(text, pages))
+                })
+              }
+            />
             <Card.Actions style={{ alignSelf: "flex-end" }}>
               <Button
                 onPress={() => {

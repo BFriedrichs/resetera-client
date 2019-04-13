@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "react-native";
 import styled from "styled-components/native";
 
-const BaseTitle = styled.Text`
+export const BaseTitle = styled.Text`
   color: ${props => props.color || props.theme.text};
 `;
 
