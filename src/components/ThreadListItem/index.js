@@ -54,6 +54,7 @@ const ThreadListItem = ({ navigation, forumName, item, theme, divider }) => (
     onPress={() =>
       navigation.push("Thread", { threadId: item.id, title: forumName })
     }
+    delayPressIn={20}
   >
     <ListItemWrapper divider={divider}>
       <SpacedCont>

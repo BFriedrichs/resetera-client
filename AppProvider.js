@@ -20,7 +20,7 @@ import registerForPush from "utils/push-notifications";
 import Color from "utils/color-helper";
 
 import { setPushToken } from "data/user/actions";
-import { getPushToken } from "data/user/selectors";
+import { getPushToken, getSettings } from "data/user/selectors";
 
 import Home from "./src/screens/Home";
 import Forum from "./src/screens/Forum";
@@ -114,7 +114,7 @@ class AppProvider extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  theme: UITheme[state.user.darkMode ? "dark" : "light"],
+  theme: UITheme[getSettings(state).darkMode ? "dark" : "light"],
   pushToken: getPushToken(state)
 });
 

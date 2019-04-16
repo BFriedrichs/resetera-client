@@ -1,16 +1,19 @@
 import { createSelector } from "reselect";
 
-const settingsSelector = state => state.user;
+export const userSelector = state => state.user;
 
-export const getSettings = settingsSelector;
+export const getSettings = createSelector(
+  userSelector,
+  user => user.settings
+);
 
 export const getCachedThread = threadId =>
   createSelector(
-    settingsSelector,
+    userSelector,
     user => user.threadCache.find(e => e.id === threadId)
   );
 
 export const getPushToken = createSelector(
-  settingsSelector,
+  userSelector,
   user => user.pushToken
 );

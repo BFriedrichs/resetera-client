@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import styled from "styled-components/native";
 
 import { Animated, View, Text, TouchableWithoutFeedback } from "react-native";
-import { getSettings } from "data/user/selectors";
+import { userSelector } from "data/user/selectors";
 import { toggleSettingsDisplay } from "data/user/actions";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -57,7 +57,7 @@ class SettingsToggle extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  open: getSettings(state).open
+  open: userSelector(state).open
 });
 const mapDispatchToProps = dispatch => ({
   toggleSettingsDisplay: bindActionCreators(toggleSettingsDisplay, dispatch)

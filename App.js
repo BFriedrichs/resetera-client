@@ -25,7 +25,12 @@ export default class App extends React.Component {
     loadData("settings").then(result => {
       this.store = createStore(
         reducers,
-        { user: { ...initialState, ...result } },
+        {
+          user: {
+            ...initialState,
+            settings: { ...initialState.settings, ...result }
+          }
+        },
         composeWithDevTools(applyMiddleware(thunkMiddleware, sessionMiddleware))
       );
       this.setState({ loadedStore: true });

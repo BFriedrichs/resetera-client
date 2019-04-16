@@ -2,17 +2,20 @@ import produce from "immer";
 import { ACTIONS } from "./constants";
 
 export const initialState = {
-  darkMode: false,
   open: false,
   threadCache: [],
-  pushToken: null
+  pushToken: null,
+  settings: {
+    darkMode: false,
+    pushActive: true
+  }
 };
 
 const user = (state = initialState, action) => {
   return produce(state, draft => {
     switch (action.type) {
       case ACTIONS.TOGGLE_THEME:
-        draft.darkMode = !draft.darkMode;
+        draft.settings.darkMode = !draft.settings.darkMode;
         break;
       case ACTIONS.TOGGLE_SETTINGS_DISPLAY:
         draft.open = !draft.open;
@@ -31,6 +34,12 @@ const user = (state = initialState, action) => {
         break;
       case ACTIONS.SET_PUSH_TOKEN:
         draft.pushToken = action.data.token;
+        break;
+      case ACTIONS.SET_PUSH_ACTIVE_REQUEST:
+        break;
+      case ACTIONS.SET_PUSH_ACTIVE_FAILURE:
+      case ACTIONS.SET_PUSH_ACTIVE_SUCCESS:
+        draft.settings.pushActive = action.data.active;
         break;
     }
   });

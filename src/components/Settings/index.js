@@ -5,7 +5,12 @@ import { connect } from "react-redux";
 import { View, Text, Animated, SafeAreaView } from "react-native";
 import styled from "styled-components/native";
 
-import { toggleSettingsDisplay, toggleTheme } from "data/user/actions";
+import {
+  toggleSettingsDisplay,
+  toggleTheme,
+  setPushActive
+} from "data/user/actions";
+import { userSelector, getSettings, getPushToken } from "data/user/selectors";
 
 import TouchableDebounce from "components/TouchableDebounce";
 import { H1 } from "components/Title";
@@ -64,20 +69,25 @@ class Settings extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { settings } = this.props;
-    this.setOpen(settings.open);
+    this.setOpen(this.props.open);
   }
 
   componentDidUpdate(prevProps) {
-    const { settings } = this.props;
+    const { open } = this.props;
 
-    if (settings.open !== prevProps.open) {
-      this.setOpen(settings.open);
+    if (open !== prevProps.open) {
+      this.setOpen(open);
     }
   }
 
   render() {
-    const { toggleSettingsDisplay, toggleTheme, settings } = this.props;
+    const {
+      toggleSettingsDisplay,
+      toggleTheme,
+      setPushActive,
+      settings,
+      pushToken
+    } = this.props;
     const { width } = this.state;
 
     return (
@@ -94,7 +104,16 @@ class Settings extends React.PureComponent {
           <SafeAreaView>
             <Title>Settings</Title>
             <SettingsRow
+              name="Thread Updates"
+              description="Receive push notifications about currently trending threads."
+              isOn={settings.pushActive}
+              onToggle={isOn => {
+                setPushActive(pushToken, isOn);
+              }}
+            />
+            <SettingsRow
               name="Dark Mode"
+              description="Zzz."
               isOn={settings.darkMode}
               onToggle={toggleTheme}
             />
@@ -106,12 +125,15 @@ class Settings extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  settings: state.user
+  settings: getSettings(state),
+  open: userSelector(state).open,
+  pushToken: getPushToken(state)
 });
 
 const mapDispatchToProps = dispatch => ({
   toggleSettingsDisplay: bindActionCreators(toggleSettingsDisplay, dispatch),
-  toggleTheme: bindActionCreators(toggleTheme, dispatch)
+  toggleTheme: bindActionCreators(toggleTheme, dispatch),
+  setPushActive: bindActionCreators(setPushActive, dispatch)
 });
 
 export default connect(

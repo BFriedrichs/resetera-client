@@ -1,7 +1,7 @@
 import { API_URL } from "data/constants";
 
 const request = (endpoint, data = null) => {
-  console.log(endpoint);
+  console.log(`Request: '${endpoint}'`, data);
   if (data === null) {
     return fetch(API_URL + endpoint + "?compressed")
       .then(json => json.json())

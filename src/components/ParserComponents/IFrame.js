@@ -1,9 +1,11 @@
 import React from "react";
 import { withTheme } from "styled-components/native";
 import { Video as ExpoVideo } from "expo";
-import { View, Text, WebView, TouchableOpacity } from "react-native";
+import { View, Text, WebView } from "react-native";
 import { WebBrowser } from "expo";
 import Loader from "components/Loader";
+
+import TouchableDebounce from "components/TouchableDebounce";
 
 class IFrame extends React.PureComponent {
   constructor(props) {
@@ -91,13 +93,13 @@ class IFrame extends React.PureComponent {
           />
         );
       case "tweet":
-        const html = `<script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><style>body {color: white; background-color: ${theme.background.lighten(
-          0.5
-        )};}</style><div id="wrapper" style="visibility: hidden;">${
+        const html = `<script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><style>body {color: ${
+          theme.text
+        };}</style><div id="wrapper" style="visibility: hidden;">${
           this.state.tweet.html
         }</div>`;
         return (
-          <TouchableOpacity
+          <TouchableDebounce
             onPress={() => {
               WebBrowser.openBrowserAsync(src);
             }}
@@ -107,9 +109,11 @@ class IFrame extends React.PureComponent {
               alignContent: "center",
               justifyContent: "center"
             }}
+            delayPressIn={20}
           >
             <WebView
               style={{
+                backgroundColor: "transparent",
                 opacity: this.state.loaded ? 1 : 0,
                 width: "186%",
                 paddingBottom:
@@ -133,7 +137,7 @@ class IFrame extends React.PureComponent {
                 <Loader color={theme.text.toString()} />
               </View>
             )}
-          </TouchableOpacity>
+          </TouchableDebounce>
         );
       default:
         return <Text>Err with vid</Text>;

@@ -5,5 +5,6 @@ export const BASE_URL = "https://resetera.com";
 
 export const ENDPOINTS = {
   FORUM: "forum",
-  THREAD: "thread"
+  THREAD: "thread",
+  PUSH: "push-token"
 };
