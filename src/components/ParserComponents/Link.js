@@ -9,6 +9,8 @@ import { WebBrowser } from "expo";
 
 import { BASE_URL } from "data/constants";
 
+import { openThread } from "utils/opener";
+
 const LinkText = styled.Text`
   color: #6face5;
 `;
@@ -43,8 +45,7 @@ const Link = props => {
         onPress={async () => {
           switch (target) {
             case "thread":
-              const gotoPage = page || 1;
-              navigation.push("Thread", { threadId: id, page: gotoPage });
+              openThread(navigation, id, page);
               break;
             case "forum":
               navigation.push("Forum", { forumId: id });
@@ -66,7 +67,7 @@ const Link = props => {
                   if (pageMatch) {
                     page = pageMatch[0].substring(5, pageMatch[0].length - 1);
                   }
-                  navigation.push("Thread", { threadId, page, postId: id });
+                  openThread(navigation, threadId, page, id);
                 })
                 .catch(err => {
                   console.log(err);

@@ -42,7 +42,7 @@ const UserName = styled.Text`
 `;
 
 const PostDate = styled.Text`
-  font-size: 13px;
+  font-size: 15px;
   color: #868686;
   color: ${props => props.theme.text};
 `;

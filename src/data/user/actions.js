@@ -8,3 +8,8 @@ export const addToThreadCache = (threadId, page) => ({
   type: ACTIONS.ADD_TO_THREAD_CACHE,
   data: { id: threadId, page }
 });
+
+export const setPushToken = token => ({
+  type: ACTIONS.SET_PUSH_TOKEN,
+  data: { token }
+});

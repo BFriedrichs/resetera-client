@@ -3,13 +3,14 @@ import { View, Text } from "react-native";
 import { withNavigation } from "react-navigation";
 import styled, { withTheme } from "styled-components/native";
 
-import { List, TouchableRipple } from "react-native-paper";
+import TouchableDebounce from "components/TouchableDebounce";
+import { List } from "react-native-paper";
 import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 
 import { H3, H4 } from "components/Title";
 
 const ListItemWrapper = styled.View`
-  padding: 24px 32px;
+  padding: 16px 32px;
   justify-content: center;
   border-color: ${props => props.theme.background.darken(0.2)};
   border-bottom-width: ${props => (props.divider ? 1 : 0)};
@@ -37,8 +38,9 @@ const ContCount = styled.View`
 const Status = styled(Cont)`
   flex-flow: column;
   position: absolute;
-  top: 24px;
-  left: 12px;
+  top: 16px;
+  left: 10px;
+  align-content: center;
 `;
 
 const IconPos = styled.View`
@@ -47,15 +49,15 @@ const IconPos = styled.View`
 `;
 
 const ThreadListItem = ({ navigation, forumName, item, theme, divider }) => (
-  <TouchableRipple
-    rippleColor="rgba(0, 0, 0, .8)"
+  <TouchableDebounce
+    activeOpacity={0.6}
     onPress={() =>
       navigation.push("Thread", { threadId: item.id, title: forumName })
     }
   >
     <ListItemWrapper divider={divider}>
       <SpacedCont>
-        <Info>{item.date}</Info>
+        <Info>{item.latest_date}</Info>
         <ContCount>
           <ContCount>
             <IconPos>
@@ -81,24 +83,16 @@ const ThreadListItem = ({ navigation, forumName, item, theme, divider }) => (
       </SpacedCont>
       <Status>
         {item.statuses.map((e, i) => {
+          const iconStyle = {
+            color: theme.text,
+            marginBottom: 4
+          };
           switch (e) {
             case "sticky":
-              return (
-                <Entypo
-                  key={i}
-                  name="pin"
-                  size={12}
-                  style={{ color: theme.text }}
-                />
-              );
+              return <Entypo key={i} name="pin" size={12} style={iconStyle} />;
             case "locked":
               return (
-                <Ionicons
-                  key={i}
-                  name="md-lock"
-                  size={16}
-                  style={{ color: theme.text }}
-                />
+                <Ionicons key={i} name="md-lock" size={16} style={iconStyle} />
               );
             case "poll":
               return (
@@ -106,7 +100,7 @@ const ThreadListItem = ({ navigation, forumName, item, theme, divider }) => (
                   key={i}
                   name="poll"
                   size={16}
-                  style={{ color: theme.text }}
+                  style={iconStyle}
                 />
               );
             default:
@@ -116,7 +110,7 @@ const ThreadListItem = ({ navigation, forumName, item, theme, divider }) => (
       </Status>
       <H3>{item.meta.name}</H3>
     </ListItemWrapper>
-  </TouchableRipple>
+  </TouchableDebounce>
 );
 
 export default withTheme(withNavigation(ThreadListItem));

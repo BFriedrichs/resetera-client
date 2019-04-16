@@ -8,7 +8,8 @@ import {
   TouchableHighlight,
   CameraRoll,
   ActionSheetIOS,
-  Dimensions
+  Dimensions,
+  Animated
 } from "react-native";
 import styled from "styled-components/native";
 import { WebBrowser } from "expo";
@@ -20,7 +21,7 @@ import BlurOverlay from "components/BlurOverlay";
 
 import getBase64FromImageSource from "utils/image-to-base64";
 
-const PostImage = styled.Image`
+const PostImage = styled(Animated.Image)`
   width: ${props => props.w || 0}px;
   height: ${props => props.h || 0}px;
   max-width: 100%;
@@ -54,7 +55,8 @@ class RemoteImage extends React.PureComponent {
       height: (size && size.height) || 250,
       sizeLoaded: props.isCached,
       imageLoaded: props.isCached,
-      isLoadingShare: false
+      isLoadingShare: false,
+      radius: new Animated.Value(5)
     };
 
     this._isMounted = false;
@@ -71,18 +73,24 @@ class RemoteImage extends React.PureComponent {
           const ar = h / w;
           const newWidth = dims.width - 44;
           const newHeight = newWidth * ar;
-          this.setState({
-            width: newWidth,
-            height: newHeight,
-            sizeLoaded: true
-          });
           addToImageCache(src, { width: newWidth, height: newHeight });
+          this.setState(
+            {
+              width: newWidth,
+              height: newHeight,
+              sizeLoaded: true
+            },
+            () => {
+              Animated.timing(this.state.radius, {
+                toValue: 0,
+                duration: 1000
+              }).start();
+            }
+          );
         }
       });
     }
   }
-
-  componentDidUpdate(prevProps, prevState) {}
 
   componentWillUnmount() {
     this._isMounted = false;
@@ -96,10 +104,14 @@ class RemoteImage extends React.PureComponent {
         },
         err => {
           console.log(err);
-          this.setState({ isLoadingShare: false });
+          if (this._isMounted) {
+            this.setState({ isLoadingShare: false });
+          }
         },
         () => {
-          this.setState({ isLoadingShare: false });
+          if (this._isMounted) {
+            this.setState({ isLoadingShare: false });
+          }
         }
       );
     }, 1500);
@@ -119,7 +131,9 @@ class RemoteImage extends React.PureComponent {
             })
             .catch(err => {
               console.log(err);
-              this.setState({ isLoadingShare: false });
+              if (this._isMounted) {
+                this.setState({ isLoadingShare: false });
+              }
             });
         });
         break;
@@ -133,7 +147,8 @@ class RemoteImage extends React.PureComponent {
       height,
       sizeLoaded,
       imageLoaded,
-      isLoadingShare
+      isLoadingShare,
+      radius
     } = this.state;
 
     const actions = {
@@ -156,14 +171,17 @@ class RemoteImage extends React.PureComponent {
             source={{ uri: src }}
             w={width}
             h={height}
+            blurRadius={radius}
             onLoadEnd={() => {
-              this.setState({
-                imageLoaded: true
-              });
+              if (this._isMounted) {
+                this.setState({
+                  imageLoaded: true
+                });
+              }
             }}
           />
         </TouchableHighlight>
-        {!imageLoaded || isLoadingShare ? <LoadingIndicator /> : null}
+        {isLoadingShare ? <LoadingIndicator /> : null}
       </View>
     );
   }

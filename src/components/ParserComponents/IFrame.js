@@ -14,18 +14,27 @@ class IFrame extends React.PureComponent {
       size: { width: 1, height: 1 },
       loaded: false
     };
+
+    this._mounted = false;
   }
 
   componentDidMount() {
     const { src, display } = this.props;
+    this._mounted = true;
 
     if (!this.state.loaded && display === "tweet") {
       fetch(`https://publish.twitter.com/oembed?url=${src}`)
         .then(json => json.json())
         .then(result => {
-          this.setState({ tweet: result });
+          if (this._mounted) {
+            this.setState({ tweet: result });
+          }
         });
     }
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
   }
 
   // https://github.com/facebook/react-native/issues/10865#issuecomment-269847703

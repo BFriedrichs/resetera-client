@@ -16,9 +16,9 @@ export const H2 = styled(BaseTitle)`
 `;
 
 export const H3 = styled(BaseTitle)`
-  font-size: 16px;
+  font-size: 17px;
 `;
 
 export const H4 = styled(BaseTitle)`
-  font-size: 14px;
+  font-size: 15px;
 `;

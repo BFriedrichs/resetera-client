@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import { withNavigation } from "react-navigation";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo";
 
 import asListItem from "utils/list-item-wrapper";
 
+import TouchableDebounce from "components/TouchableDebounce";
 import BetterCard from "components/BetterCard";
 import { H2, H4 } from "components/Title";
 import { Forum } from "assets";
@@ -35,7 +36,7 @@ const BGImage = styled.Image`
 `;
 
 const ForumListItem = ({ navigation, item }) => (
-  <TouchableOpacity
+  <TouchableDebounce
     onPress={() =>
       navigation.navigate("Forum", { forumId: item.id, title: item.meta.name })
     }
@@ -55,7 +56,7 @@ const ForumListItem = ({ navigation, item }) => (
         </ImageWrapper>
       </LinearGradient>
     </Card>
-  </TouchableOpacity>
+  </TouchableDebounce>
 );
 
 export default asListItem(withNavigation(ForumListItem));

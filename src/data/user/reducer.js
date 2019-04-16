@@ -3,7 +3,8 @@ import { ACTIONS } from "./constants";
 
 export const initialState = {
   darkMode: false,
-  threadCache: []
+  threadCache: [],
+  pushToken: null
 };
 
 const user = (state = initialState, action) => {
@@ -23,6 +24,9 @@ const user = (state = initialState, action) => {
         } else {
           draft.threadCache[index] = action.data;
         }
+        break;
+      case ACTIONS.SET_PUSH_TOKEN:
+        draft.pushToken = action.data.token;
         break;
     }
   });

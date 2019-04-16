@@ -29,7 +29,7 @@ class SetupAndLoad extends React.PureComponent {
     super(props);
 
     this.state = {
-      pos: new Animated.Value(0),
+      pos: new Animated.Value(-23),
       scale: new Animated.Value(1)
     };
 
@@ -56,11 +56,11 @@ class SetupAndLoad extends React.PureComponent {
 
     const bounce = Animated.sequence([
       Animated.timing(this.state.scale, {
-        toValue: 1.1,
+        toValue: 2,
         duration: 300
       }),
       Animated.timing(this.state.scale, {
-        toValue: 0.55,
+        toValue: 1.1,
         duration: 300
       })
     ]);
@@ -83,7 +83,7 @@ class SetupAndLoad extends React.PureComponent {
             style={{
               position: "absolute",
               top: this.state.pos,
-              width: 200,
+              width: 100,
               alignSelf: "center",
               transform: [
                 { scaleX: this.state.scale },

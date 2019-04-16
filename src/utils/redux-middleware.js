@@ -1,7 +1,7 @@
 import { storeData } from "utils/persist";
 import { ACTIONS as OtherActions } from "data/user/constants";
 
-const sessionMiddleware = store => next => action => {
+export const sessionMiddleware = store => next => action => {
   let result = next(action);
   if (action.type in OtherActions) {
     const settings = store.getState().user;
@@ -11,5 +11,3 @@ const sessionMiddleware = store => next => action => {
   }
   return result;
 };
-
-export default sessionMiddleware;
