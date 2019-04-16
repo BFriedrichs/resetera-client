@@ -13,6 +13,7 @@ import {
   DefaultTheme
 } from "react-native-paper";
 
+import { View } from "react-native";
 import { Notifications } from "expo";
 
 import registerForPush from "utils/push-notifications";
@@ -24,7 +25,9 @@ import { getPushToken } from "data/user/selectors";
 import Home from "./src/screens/Home";
 import Forum from "./src/screens/Forum";
 import Thread from "./src/screens/Thread";
-import ThemeToggle from "components/ThemeToggle";
+
+import SettingsToggle from "components/SettingsToggle";
+import Settings from "components/Settings";
 
 const UITheme = {
   palette: {
@@ -60,7 +63,7 @@ const AppNavigator = createStackNavigator(
       headerTitleStyle: {
         fontWeight: "bold"
       },
-      headerRight: <ThemeToggle />
+      headerRight: <SettingsToggle />
     }
   }
 );
@@ -100,7 +103,10 @@ class AppProvider extends React.PureComponent {
     return (
       <PaperThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
-          <AppContainer ref={this.navigator} />
+          <React.Fragment>
+            <AppContainer ref={this.navigator} />
+            <Settings />
+          </React.Fragment>
         </ThemeProvider>
       </PaperThemeProvider>
     );

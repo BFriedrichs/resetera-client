@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 
 import { Animated, View, Text, TouchableWithoutFeedback } from "react-native";
 import { getSettings } from "data/user/selectors";
-import { toggleTheme } from "data/user/actions";
+import { toggleSettingsDisplay } from "data/user/actions";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -14,7 +14,7 @@ const Wrapper = styled(Animated.View)`
   margin-right: 16px;
 `;
 
-class ThemeToggle extends React.Component {
+class SettingsToggle extends React.Component {
   constructor(props) {
     super(props);
 
@@ -24,8 +24,8 @@ class ThemeToggle extends React.Component {
   }
 
   onClick() {
-    const { toggleTheme } = this.props;
-    toggleTheme();
+    const { toggleSettingsDisplay } = this.props;
+    toggleSettingsDisplay();
     Animated.sequence([
       Animated.timing(this.state.bounce, {
         toValue: 0.7,
@@ -39,7 +39,7 @@ class ThemeToggle extends React.Component {
   }
 
   render() {
-    const { isDark } = this.props;
+    const { open } = this.props;
     const { bounce } = this.state;
 
     return (
@@ -49,11 +49,7 @@ class ThemeToggle extends React.Component {
             transform: [{ scaleX: bounce }, { scaleY: bounce }]
           }}
         >
-          {isDark ? (
-            <Ionicons name="ios-moon" size={24} color="white" />
-          ) : (
-            <Ionicons name="ios-sunny" size={24} color="white" />
-          )}
+          <Ionicons name="md-settings" size={24} color="white" />
         </Wrapper>
       </TouchableWithoutFeedback>
     );
@@ -61,13 +57,13 @@ class ThemeToggle extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isDark: getSettings(state).darkMode
+  open: getSettings(state).open
 });
 const mapDispatchToProps = dispatch => ({
-  toggleTheme: bindActionCreators(toggleTheme, dispatch)
+  toggleSettingsDisplay: bindActionCreators(toggleSettingsDisplay, dispatch)
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ThemeToggle);
+)(SettingsToggle);

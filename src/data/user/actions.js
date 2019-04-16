@@ -13,3 +13,7 @@ export const setPushToken = token => ({
   type: ACTIONS.SET_PUSH_TOKEN,
   data: { token }
 });
+
+export const toggleSettingsDisplay = () => ({
+  type: ACTIONS.TOGGLE_SETTINGS_DISPLAY
+});

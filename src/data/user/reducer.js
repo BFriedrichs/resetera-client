@@ -3,6 +3,7 @@ import { ACTIONS } from "./constants";
 
 export const initialState = {
   darkMode: false,
+  open: false,
   threadCache: [],
   pushToken: null
 };
@@ -12,6 +13,9 @@ const user = (state = initialState, action) => {
     switch (action.type) {
       case ACTIONS.TOGGLE_THEME:
         draft.darkMode = !draft.darkMode;
+        break;
+      case ACTIONS.TOGGLE_SETTINGS_DISPLAY:
+        draft.open = !draft.open;
         break;
       case ACTIONS.ADD_TO_THREAD_CACHE:
         const ids = draft.threadCache.map(e => e.id);
