@@ -6,6 +6,7 @@ import Link from "./Link";
 import RemoteImage from "./RemoteImage";
 import IFrame from "./IFrame";
 import Spoiler from "./Spoiler";
+import TextList from "./TextList";
 
 export {
   DefaultText,
@@ -15,5 +16,6 @@ export {
   Link,
   RemoteImage,
   IFrame,
-  Spoiler
+  Spoiler,
+  TextList
 };

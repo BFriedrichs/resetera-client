@@ -1,13 +1,6 @@
 import React from "react";
 import { Font, Asset } from "expo";
-import {
-  Dimensions,
-  StatusBar,
-  View,
-  Text,
-  Image,
-  Animated
-} from "react-native";
+import { Dimensions, StatusBar, View, Animated } from "react-native";
 
 import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 import styled from "styled-components/native";
@@ -48,7 +41,7 @@ class SetupAndLoad extends React.PureComponent {
 
   async componentDidMount() {
     const { cb } = this.props;
-    const { height, width } = Dimensions.get("window");
+    const { height } = Dimensions.get("window");
 
     const loadFonts = this._loadFonts();
     const loadImages = this._loadImages();

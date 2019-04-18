@@ -8,14 +8,11 @@ import { fetchPosts, fetchThread } from "data/thread/actions";
 import { addToThreadCache } from "data/user/actions";
 
 import {
-  selectThreadsFromForum,
   getForumIdFromThreadId,
   selectPostsFromThread,
   selectThread
 } from "data/thread/selectors";
 import { getCachedThread } from "data/user/selectors";
-
-import { ActivityIndicator } from "react-native-paper";
 
 import styled from "styled-components/native";
 import PostListItem from "components/PostListItem";
@@ -31,10 +28,10 @@ const ThreadBackground = styled.View`
 `;
 
 const Title = styled(H1)`
-  margin: 16px;
+  margin: 12px;
 `;
 
-const PaddedPagination = styled(Pagination)`
+const Bottom = styled(Pagination)`
   margin-bottom: 24px;
 `;
 
@@ -47,7 +44,7 @@ class Thread extends React.PureComponent {
     super(props);
 
     this.state = {
-      initialFetch: false,
+      initialFetch: !!props.cache,
       fetching: true
     };
 
@@ -100,11 +97,12 @@ class Thread extends React.PureComponent {
       return;
     }
     const { navigation, thread } = this.props;
+    this.setState({ fetching: true });
     navigation.navigate("Thread", { threadId: thread.id, page });
   }
 
   render() {
-    const { posts, thread, page, scrollTo } = this.props;
+    const { posts, thread, page } = this.props;
     const { initialFetch, fetching } = this.state;
     return (
       <ThreadBackground>
@@ -112,39 +110,38 @@ class Thread extends React.PureComponent {
           <React.Fragment>
             <SectionList
               ref={this.scrollView}
-              sections={[
-                { title: thread.meta.name, data: posts },
-                {
-                  title: "__nav",
-                  onlyNav: true,
-                  data: [{ __empty: true }]
-                }
-              ]}
+              onRefresh={() => {
+                this.setState({ fetching: true }, async () => {
+                  await this.fetchNewPosts();
+                  this.setState({ fetching: false });
+                });
+              }}
+              refreshing={fetching}
+              sections={[{ title: thread.meta.name, data: posts }]}
               keyExtractor={this._keyExtractor}
-              renderItem={({ item }) =>
-                item.__empty ? null : <PostListItem item={item} />
-              }
+              renderItem={({ item }) => <PostListItem item={item} />}
               stickySectionHeadersEnabled={false}
-              renderSectionHeader={({ section: { title, onlyNav } }) =>
-                fetching && onlyNav ? null : (
-                  <View>
-                    {!onlyNav ? (
-                      <React.Fragment>
-                        <Title>{title}</Title>
-                        {thread.poll ? <Poll poll={thread.poll} /> : null}
-                      </React.Fragment>
-                    ) : null}
-                    <PaddedPagination
-                      loadPage={this.loadPage.bind(this)}
-                      page={page}
-                      pages={thread.meta.pages}
-                    />
-                    {fetching ? (
-                      <ActivityIndicator size="large" animating={true} />
-                    ) : null}
-                  </View>
-                )
+              ListFooterComponent={
+                <Bottom
+                  loadPage={this.loadPage.bind(this)}
+                  page={page}
+                  pages={thread.meta.pages}
+                />
               }
+              renderSectionHeader={({ section: { title } }) => (
+                <View>
+                  <React.Fragment>
+                    <Title>{title}</Title>
+                    {thread.poll ? <Poll poll={thread.poll} /> : null}
+                  </React.Fragment>
+
+                  <Bottom
+                    loadPage={this.loadPage.bind(this)}
+                    page={page}
+                    pages={thread.meta.pages}
+                  />
+                </View>
+              )}
             />
           </React.Fragment>
         ) : (
@@ -172,6 +169,7 @@ const mapStateToProps = (state, ownProps) => {
     threadId: threadId,
     posts: selectPostsFromThread(threadId, page)(state),
     page: page,
+    cache: cachedThread,
     scrollTo: parseInt(postId)
   };
 };

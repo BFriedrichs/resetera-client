@@ -3,7 +3,6 @@ import { View, Modal, Dimensions, KeyboardAvoidingView } from "react-native";
 import { BlurView } from "expo";
 import styled from "styled-components/native";
 
-import { Card, Button } from "react-native-paper";
 import BetterCard from "components/BetterCard";
 
 const Centered = styled.View`

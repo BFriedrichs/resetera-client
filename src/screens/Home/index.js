@@ -1,8 +1,7 @@
 import React from "react";
-import { View, Text, FlatList, Image } from "react-native";
+import { View, FlatList, Image } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { ActivityIndicator, withTheme } from "react-native-paper";
 
 import styled from "styled-components/native";
 import { fetchForumLinks } from "data/forum/actions";
@@ -19,7 +18,7 @@ const HomeBackground = styled(View)`
 `;
 
 class Home extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     headerTitle: (
       <Image resizeMode="contain" style={{ width: 110 }} source={LogoWhite} />
     )

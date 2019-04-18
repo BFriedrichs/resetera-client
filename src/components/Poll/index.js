@@ -1,12 +1,12 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import styled from "styled-components/native";
 import { Card } from "react-native-paper";
 
 import { H2, H4 } from "components/Title";
 
 const PostBackground = styled(Card).attrs({
-  elevation: 5
+  elevation: 3
 })`
   border-radius: 16px;
   margin-bottom: 24px;
@@ -30,7 +30,7 @@ const ResultsContainer = styled.View`
 
 const ResultRow = styled.View`
   flex-flow: row;
-  padding: 20px 8px;
+  padding: 8px 12px;
   justify-content: space-between;
   align-content: center;
   border-bottom-color: ${props => props.theme.background.adjust(0.2)};
@@ -46,7 +46,7 @@ const RowFill = styled.View`
   bottom: 0;
   width: ${props => props.width}%;
   flex: 1;
-  padding: 20px 0;
+  padding: 8px 0;
 `;
 
 const RowText = styled(H4)``;
@@ -57,6 +57,7 @@ const FloatRight = styled(RowText)`
 
 const Name = styled(RowText)`
   align-self: center;
+  max-width: 75%;
 `;
 
 const Poll = ({ poll }) => (

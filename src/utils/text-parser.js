@@ -1,61 +1,52 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
-import {
-  DefaultText,
-  Bold,
-  Block,
-  BlockTitle,
-  Link,
-  RemoteImage,
-  IFrame,
-  Spoiler
-} from "components/ParserComponents";
+import { View, Text } from "react-native";
+import * as Parser from "components/ParserComponents";
 
 const parseText = text => {
   return text.map((e, i) => {
     switch (e.type) {
       case "text":
         return <Text key={i}>{e.content}</Text>;
-        break;
       case "textgroup":
-        return <DefaultText key={i}>{parseText(e.content)}</DefaultText>;
-        break;
+        return (
+          <Parser.DefaultText key={i}>
+            {parseText(e.content)}
+          </Parser.DefaultText>
+        );
       case "image":
-        return <RemoteImage key={i} src={e.attrs.src} />;
-        break;
+        return <Parser.RemoteImage key={i} src={e.attrs.src} />;
       case "iframe":
-        return <IFrame key={i} {...e.attrs} />;
-        break;
+        return <Parser.IFrame key={i} {...e.attrs} />;
       case "bold":
-        return <Bold key={i}>{parseText(e.content)}</Bold>;
-        break;
+        return <Parser.Bold key={i}>{parseText(e.content)}</Parser.Bold>;
       case "spoiler":
-        return <Spoiler key={i}>{parseText(e.content)}</Spoiler>;
-        break;
-      case "linkto":
+        return <Parser.Spoiler key={i}>{parseText(e.content)}</Parser.Spoiler>;
+      case "linkto": {
         const { type, ...additionalAttrs } = e.attrs;
         return (
-          <Link
-            internal={e.attrs.type === "internal"}
+          <Parser.Link
+            internal={type === "internal"}
             key={i}
             {...additionalAttrs}
           >
             {parseText(e.content)}
-          </Link>
+          </Parser.Link>
         );
-        break;
+      }
       case "textlist":
-        return <View key={i}>{parseText(e.content)}</View>;
-        break;
+        return (
+          <Parser.TextList key={i} {...e.attrs}>
+            {parseText(e.content)}
+          </Parser.TextList>
+        );
       case "textlistitem":
         return <View key={i}>{parseText(e.content)}</View>;
-        break;
       case "block":
-        return <Block key={i}>{parseText(e.content)}</Block>;
-        break;
+        return <Parser.Block key={i}>{parseText(e.content)}</Parser.Block>;
       case "blocktitle":
-        return <BlockTitle key={i}>{parseText(e.content)}</BlockTitle>;
-        break;
+        return (
+          <Parser.BlockTitle key={i}>{parseText(e.content)}</Parser.BlockTitle>
+        );
       default:
         return parseText(e.content);
     }

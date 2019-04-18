@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text } from "react-native";
 import styled from "styled-components/native";
 
 import { Switch } from "react-native-paper";
-import { BaseTitle, H2 } from "components/Title";
+import { H2, H4 } from "components/Title";
 
 const Row = styled.View`
   padding: 16px 0;
@@ -15,11 +14,9 @@ const Row = styled.View`
   align-items: center;
 `;
 
-const Name = styled(H2)`
-  font-size: 22px;
-`;
+const Name = styled(H2)``;
 
-const Description = styled(BaseTitle)``;
+const Description = styled(H4)``;
 
 const Wrapper = styled.View`
   width: 75%;

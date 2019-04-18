@@ -1,12 +1,12 @@
+/* eslint-disable */
+
 import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import {
   View,
-  Text,
   Image,
   TouchableWithoutFeedback,
-  CameraRoll,
   ActionSheetIOS,
   Dimensions
 } from "react-native";
@@ -16,8 +16,6 @@ import { ActivityIndicator } from "react-native-paper";
 
 import { addToImageCache } from "data/thread/actions";
 import PeekView from "components/PeekView";
-import BlurOverlay from "components/BlurOverlay";
-
 import getBase64FromImageSource from "utils/image-to-base64";
 
 const PostImage = styled.Image`
@@ -100,7 +98,7 @@ class RemoteImage extends React.PureComponent {
           url: `data:image/png;base64,${data}`
         },
         err => {
-          console.log(err);
+          console.error(err);
           this.setState({ isLoadingShare: false });
         },
         () => {
@@ -111,15 +109,8 @@ class RemoteImage extends React.PureComponent {
   }
 
   render() {
-    const { src, addToImageCache } = this.props;
-    const {
-      width,
-      height,
-      sizeLoaded,
-      imageLoaded,
-      pressed,
-      isLoadingShare
-    } = this.state;
+    const { src } = this.props;
+    const { width, height, imageLoaded, pressed, isLoadingShare } = this.state;
 
     const imageView = (
       <PostImage
@@ -156,7 +147,7 @@ class RemoteImage extends React.PureComponent {
                       this.openShareWithData.bind(this)(data);
                     })
                     .catch(err => {
-                      console.log(err);
+                      console.error(err);
                       this.setState({ isLoadingShare: false });
                     });
                 });
@@ -203,3 +194,5 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(RemoteImage);
+
+/* eslint-enable */

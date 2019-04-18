@@ -1,12 +1,12 @@
 import { API_URL } from "data/constants";
 
 const request = (endpoint, data = null) => {
-  console.log(`Request: '${endpoint}'`, data);
+  console.info(`Request: '${endpoint}'`, data);
   if (data === null) {
     return fetch(API_URL + endpoint + "?compressed")
       .then(json => json.json())
       .catch(err => {
-        console.log(err);
+        console.error(err);
       });
   }
   return fetch(API_URL + endpoint + "?compressed", {
@@ -19,7 +19,7 @@ const request = (endpoint, data = null) => {
   })
     .then(json => json.json())
     .catch(err => {
-      console.log(err);
+      console.error(err);
     });
 };
 

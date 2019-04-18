@@ -31,15 +31,7 @@ const Link = props => {
   const { internal, textOnly } = props;
   const TheClass = textOnly ? LinkText : TouchableOpacity;
   if (internal) {
-    const {
-      target,
-      id,
-      href,
-      page,
-      navigation,
-      fetchThread,
-      ...others
-    } = props;
+    const { target, id, href, page, navigation, ...others } = props;
     return (
       <TheClass
         onPress={async () => {
@@ -70,7 +62,7 @@ const Link = props => {
                   openThread(navigation, threadId, page, id);
                 })
                 .catch(err => {
-                  console.log(err);
+                  console.error(err);
                 });
               break;
           }
@@ -79,7 +71,7 @@ const Link = props => {
       />
     );
   } else {
-    const { href, ...others } = props;
+    const { href } = props;
     return (
       <TheClass
         onPress={() => {
@@ -91,7 +83,7 @@ const Link = props => {
   }
 };
 
-const mapStateToProps = (state, ownProps) => ({});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = dispatch => ({
   fetchThread: bindActionCreators(fetchThread, dispatch)

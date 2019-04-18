@@ -13,7 +13,6 @@ import {
   DefaultTheme
 } from "react-native-paper";
 
-import { View } from "react-native";
 import { Notifications } from "expo";
 
 import registerForPush from "utils/push-notifications";
@@ -89,7 +88,7 @@ class AppProvider extends React.PureComponent {
   };
 
   async componentDidMount() {
-    const { pushToken, setPushToken } = this.props;
+    const { setPushToken } = this.props;
     const token = await registerForPush();
     setPushToken(token);
 

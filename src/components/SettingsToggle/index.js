@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
 
-import { Animated, View, Text, TouchableWithoutFeedback } from "react-native";
+import { Animated, TouchableWithoutFeedback } from "react-native";
 import { userSelector } from "data/user/selectors";
 import { toggleSettingsDisplay } from "data/user/actions";
 
@@ -39,7 +39,6 @@ class SettingsToggle extends React.Component {
   }
 
   render() {
-    const { open } = this.props;
     const { bounce } = this.state;
 
     return (

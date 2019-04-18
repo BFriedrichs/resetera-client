@@ -7,7 +7,7 @@ export const storeData = async (key, data) => {
       `${JSON.stringify(data)}`
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -16,6 +16,6 @@ export const loadData = async key => {
     const value = await AsyncStorage.getItem(`@ReseteraStore:${key}`);
     return JSON.parse(value);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

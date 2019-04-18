@@ -9,8 +9,8 @@ export const getSettings = createSelector(
 
 export const getCachedThread = threadId =>
   createSelector(
-    userSelector,
-    user => user.threadCache.find(e => e.id === threadId)
+    getSettings,
+    settings => settings.threadCache.find(e => e.id === threadId)
   );
 
 export const getPushToken = createSelector(

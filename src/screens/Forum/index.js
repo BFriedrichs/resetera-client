@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
 
+import { getSettings } from "data/user/selectors";
 import { fetchThreadLinks } from "data/thread/actions";
 import { selectThreadsFromForum } from "data/thread/selectors";
 
@@ -25,13 +26,12 @@ const Title = styled(H1)`
   color: ${props => props.theme.text};
 `;
 
-const BottomPadding = styled.View`
-  width: 100%;
-  height: 24px;
+const Bottom = styled(Pagination)`
+  margin-bottom: 24px;
 `;
 
 class Forum extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     headerTitle: (
       <Image resizeMode="contain" style={{ width: 110 }} source={LogoWhite} />
     )
@@ -53,7 +53,7 @@ class Forum extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { threads, page, forum } = this.props;
+    const { page, forum } = this.props;
     if (prevProps.forum.id !== forum.id || prevProps.page !== page) {
       this.setState({ fetching: true }, async () => {
         const { fetchThreadLinks } = this.props;
@@ -72,51 +72,61 @@ class Forum extends React.Component {
       return;
     }
     const { navigation, forum } = this.props;
+    this.setState({ fetching: true });
     navigation.navigate("Forum", { forumId: forum.id, page });
   }
 
   render() {
-    const { threads, forum, page } = this.props;
+    const {
+      fetchThreadLinks,
+      threads,
+      forum,
+      page,
+      markAsRead,
+      idCache
+    } = this.props;
     const { initialFetch, fetching } = this.state;
 
     return (
       <ForumBackground>
         {initialFetch ? (
           <SectionList
-            sections={[
-              { title: forum.meta.name, data: threads },
-              {
-                title: "__nav",
-                onlyNav: true,
-                data: [{ __empty: true }]
-              }
-            ]}
+            onRefresh={() => {
+              this.setState({ fetching: true }, async () => {
+                await fetchThreadLinks(forum.id, page);
+                this.setState({ fetching: false });
+              });
+            }}
+            refreshing={fetching}
+            sections={[{ title: forum.meta.name, data: threads }]}
             keyExtractor={this._keyExtractor}
-            renderItem={({ item, index }) =>
-              item.__empty ? (
-                <BottomPadding />
-              ) : (
-                <ThreadListItem
-                  forumName={forum.meta.name}
-                  item={item}
-                  divider={index !== threads.length - 1}
-                />
-              )
-            }
+            renderItem={({ item, index }) => (
+              <ThreadListItem
+                markAsRead={markAsRead}
+                forumName={forum.meta.name}
+                item={item}
+                cached={idCache.indexOf(item.id) !== -1}
+                divider={index !== threads.length - 1}
+              />
+            )}
             stickySectionHeadersEnabled={false}
-            renderSectionHeader={({ section: { title, onlyNav } }) =>
-              fetching && onlyNav ? null : (
-                <View>
-                  {!onlyNav ? <Title>{title}</Title> : null}
-                  <Pagination
-                    loadPage={this.loadPage.bind(this)}
-                    page={page}
-                    pages={forum.meta.pages}
-                  />
-                  {fetching ? <Loader size="large" /> : null}
-                </View>
-              )
+            ListFooterComponent={
+              <Bottom
+                loadPage={this.loadPage.bind(this)}
+                page={page}
+                pages={forum.meta.pages}
+              />
             }
+            renderSectionHeader={({ section: { title } }) => (
+              <View>
+                <Title>{title}</Title>
+                <Pagination
+                  loadPage={this.loadPage.bind(this)}
+                  page={page}
+                  pages={forum.meta.pages}
+                />
+              </View>
+            )}
           />
         ) : (
           <Loader size="large" />
@@ -129,10 +139,13 @@ class Forum extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const forumId = ownProps.navigation.getParam("forumId");
   const page = ownProps.navigation.getParam("page", 1);
+  const idCache = getSettings(state).threadCache.map(e => e.id);
   return {
     threads: selectThreadsFromForum(forumId, page)(state),
     forum: state.forum.forums[forumId],
-    page: page
+    page: page,
+    markAsRead: getSettings(state).markAsRead,
+    idCache: idCache
   };
 };
 

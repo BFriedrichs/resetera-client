@@ -7,6 +7,11 @@ export const toggleTheme = () => ({
   type: ACTIONS.TOGGLE_THEME
 });
 
+export const markAsRead = mark => ({
+  type: ACTIONS.MARK_AS_READ,
+  data: mark
+});
+
 export const addToThreadCache = (threadId, page) => ({
   type: ACTIONS.ADD_TO_THREAD_CACHE,
   data: { id: threadId, page }
@@ -26,11 +31,11 @@ export const setPushActive = (token, active) => {
     dispatch(setPushActiveRequest());
 
     return request(ENDPOINTS.PUSH + "/active", { token, active })
-      .then(data => {
+      .then(_ => {
         dispatch(setPushActiveSuccess(active));
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         dispatch(setPushActiveFailure(!active));
       });
   };

@@ -1,10 +1,11 @@
 import React from "react";
 import { withTheme } from "styled-components/native";
-import { Video as ExpoVideo } from "expo";
 import { View, Text, WebView } from "react-native";
 import { WebBrowser } from "expo";
-import Loader from "components/Loader";
 
+import fetchWithTimeout from "utils/fetchWithTimeout";
+
+import Loader from "components/Loader";
 import TouchableDebounce from "components/TouchableDebounce";
 
 class IFrame extends React.PureComponent {
@@ -14,7 +15,8 @@ class IFrame extends React.PureComponent {
     this.state = {
       tweet: { html: "Loading tweet..." },
       size: { width: 1, height: 1 },
-      loaded: false
+      loaded: false,
+      error: false
     };
 
     this._mounted = false;
@@ -25,11 +27,22 @@ class IFrame extends React.PureComponent {
     this._mounted = true;
 
     if (!this.state.loaded && display === "tweet") {
-      fetch(`https://publish.twitter.com/oembed?url=${src}`)
+      fetchWithTimeout(`https://publish.twitter.com/oembed?url=${src}`)
         .then(json => json.json())
+        .catch(_ => {})
         .then(result => {
           if (this._mounted) {
-            this.setState({ tweet: result });
+            if (result.errors) {
+              this.setState({
+                error: true,
+                tweet: {
+                  html:
+                    "Error loading tweet. You can try tapping here to load it in your browser."
+                }
+              });
+            } else {
+              this.setState({ tweet: result });
+            }
           }
         });
     }
@@ -39,6 +52,7 @@ class IFrame extends React.PureComponent {
     this._mounted = false;
   }
 
+  /* eslint-disable no-undef */
   // https://github.com/facebook/react-native/issues/10865#issuecomment-269847703
   postMessage() {
     const patchPostMessageFunction = function() {
@@ -71,6 +85,7 @@ class IFrame extends React.PureComponent {
       }
     }, 500);
   }
+  /* eslint-enable no-undef */
 
   render() {
     const { src, display, theme } = this.props;
@@ -92,7 +107,7 @@ class IFrame extends React.PureComponent {
             source={{ uri: src }}
           />
         );
-      case "tweet":
+      case "tweet": {
         const html = `<script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><style>body {color: ${
           theme.text
         };}</style><div id="wrapper" style="visibility: hidden;">${
@@ -106,11 +121,24 @@ class IFrame extends React.PureComponent {
             style={{
               width: "100%",
               overflow: "hidden",
+              height: this.state.loaded ? "auto" : 150,
               alignContent: "center",
               justifyContent: "center"
             }}
             delayPressIn={20}
           >
+            {this.state.loaded || !this.state.error ? null : (
+              <View
+                style={{ position: "absolute", alignSelf: "center", top: 50 }}
+              >
+                <Text style={{ color: theme.text }}>
+                  {this.state.tweet.html}
+                </Text>
+                {this.state.error ? null : (
+                  <Loader color={theme.text.toString()} />
+                )}
+              </View>
+            )}
             <WebView
               style={{
                 backgroundColor: "transparent",
@@ -129,16 +157,9 @@ class IFrame extends React.PureComponent {
                 this.setState({ loaded: true, size: data.size });
               }}
             />
-            {this.state.loaded ? null : (
-              <View
-                style={{ position: "absolute", alignSelf: "center", top: 50 }}
-              >
-                <Text style={{ color: theme.text }}>Tweet is loading</Text>
-                <Loader color={theme.text.toString()} />
-              </View>
-            )}
           </TouchableDebounce>
         );
+      }
       default:
         return <Text>Err with vid</Text>;
     }

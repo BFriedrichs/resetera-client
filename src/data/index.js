@@ -5,7 +5,7 @@ import forum from "./forum/reducer";
 import thread from "./thread/reducer";
 
 export default combineReducers({
-  user,
   forum,
-  thread
+  thread,
+  user
 });

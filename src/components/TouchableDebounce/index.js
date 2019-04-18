@@ -26,8 +26,8 @@ class TouchableDebounce extends React.PureComponent {
   render() {
     const {
       TouchableClass = TouchableOpacity,
-      timer,
-      onPress,
+      timer, // eslint-disable-line no-unused-vars
+      onPress, // eslint-disable-line no-unused-vars
       ...otherProps
     } = this.props;
     return <TouchableClass onPress={this.onPress.bind(this)} {...otherProps} />;

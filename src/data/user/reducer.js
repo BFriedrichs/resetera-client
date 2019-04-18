@@ -3,11 +3,12 @@ import { ACTIONS } from "./constants";
 
 export const initialState = {
   open: false,
-  threadCache: [],
   pushToken: null,
   settings: {
     darkMode: false,
-    pushActive: true
+    pushActive: true,
+    markAsRead: true,
+    threadCache: []
   }
 };
 
@@ -17,21 +18,25 @@ const user = (state = initialState, action) => {
       case ACTIONS.TOGGLE_THEME:
         draft.settings.darkMode = !draft.settings.darkMode;
         break;
+      case ACTIONS.MARK_AS_READ:
+        draft.settings.markAsRead = action.data;
+        break;
       case ACTIONS.TOGGLE_SETTINGS_DISPLAY:
         draft.open = !draft.open;
         break;
-      case ACTIONS.ADD_TO_THREAD_CACHE:
-        const ids = draft.threadCache.map(e => e.id);
+      case ACTIONS.ADD_TO_THREAD_CACHE: {
+        const ids = draft.settings.threadCache.map(e => e.id);
         const index = ids.indexOf(action.data.id);
         if (index === -1) {
-          draft.threadCache.push(action.data);
-          if (draft.threadCache.length > 100) {
-            draft.threadCache.splice(0, 1);
+          draft.settings.threadCache.push(action.data);
+          if (draft.settings.threadCache.length > 500) {
+            draft.settings.threadCache.splice(0, 1);
           }
         } else {
-          draft.threadCache[index] = action.data;
+          draft.settings.threadCache[index] = action.data;
         }
         break;
+      }
       case ACTIONS.SET_PUSH_TOKEN:
         draft.pushToken = action.data.token;
         break;

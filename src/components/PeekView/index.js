@@ -1,29 +1,18 @@
 import React from "react";
-import {
-  Platform,
-  View,
-  Text,
-  ActionSheetIOS,
-  TouchableWithoutFeedback,
-  CameraRoll,
-  Modal,
-  Dimensions,
-  Animated
-} from "react-native";
-import { BlurView } from "expo";
+import { Platform, ActionSheetIOS, Dimensions, Animated } from "react-native";
 import styled from "styled-components/native";
 import { Surface } from "react-native-paper";
 
 import BlurOverlay from "components/BlurOverlay";
 
 const CardView = styled(Surface).attrs({
-  elevation: 5
+  elevation: 3
 })`
   padding: 48px 16px 16px 16px;
   margin: 0 8px;
   border-radius: 16px;
   background: #fff;
-  elevation: 5;
+  elevation: 3;
 `;
 
 class PeekView extends React.PureComponent {
@@ -82,7 +71,7 @@ class PeekView extends React.PureComponent {
 
   render() {
     const { modalPressed, scale } = this.state;
-    const { visible, children, onActivate } = this.props;
+    const { visible, children } = this.props;
     const modalVisible = visible || modalPressed;
     const dims = Dimensions.get("window");
 

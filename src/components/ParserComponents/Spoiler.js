@@ -1,8 +1,6 @@
 import React from "react";
-import { View, Text } from "react-native";
 import styled from "styled-components/native";
 import { Button } from "react-native-paper";
-import DefaultText from "./DefaultText";
 
 const BGView = styled.View`
   margin: 8px;

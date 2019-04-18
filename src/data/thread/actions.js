@@ -12,7 +12,7 @@ export const fetchThreadLinks = (forumId, page = 1) => {
         dispatch(fetchThreadLinksSuccess(forumId, data.payload));
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         dispatch(fetchThreadLinksFailure());
       });
   };
@@ -40,7 +40,7 @@ export const fetchThread = threadId => {
         dispatch(fetchThreadSuccess(threadId, data.payload));
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         dispatch(fetchThreadFailure());
       });
   };
@@ -69,7 +69,7 @@ export const fetchPosts = (threadId, page = 1) => {
         dispatch(fetchPostsSuccess(threadId, data.payload));
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         dispatch(fetchPostsFailure());
       });
   };

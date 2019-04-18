@@ -1,16 +1,15 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import { withNavigation } from "react-navigation";
 import styled, { withTheme } from "styled-components/native";
 
 import TouchableDebounce from "components/TouchableDebounce";
-import { List } from "react-native-paper";
 import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 
 import { H3, H4 } from "components/Title";
 
 const ListItemWrapper = styled.View`
-  padding: 16px 32px;
+  padding: 16px 8px 16px 32px;
   justify-content: center;
   border-color: ${props => props.theme.background.darken(0.2)};
   border-bottom-width: ${props => (props.divider ? 1 : 0)};
@@ -38,7 +37,7 @@ const ContCount = styled.View`
 const Status = styled(Cont)`
   flex-flow: column;
   position: absolute;
-  top: 16px;
+  top: 17px;
   left: 10px;
   align-content: center;
 `;
@@ -48,7 +47,19 @@ const IconPos = styled.View`
   margin-right: 4px;
 `;
 
-const ThreadListItem = ({ navigation, forumName, item, theme, divider }) => (
+const Title = styled(H3)`
+  ${props => (props.isCached ? `color: ${props.theme.text.alpha(0.5)};` : "")};
+`;
+
+const ThreadListItem = ({
+  navigation,
+  forumName,
+  item,
+  theme,
+  divider,
+  markAsRead,
+  cached
+}) => (
   <TouchableDebounce
     activeOpacity={0.6}
     onPress={() =>
@@ -109,7 +120,7 @@ const ThreadListItem = ({ navigation, forumName, item, theme, divider }) => (
           }
         })}
       </Status>
-      <H3>{item.meta.name}</H3>
+      <Title isCached={markAsRead && cached}>{item.meta.name}</Title>
     </ListItemWrapper>
   </TouchableDebounce>
 );

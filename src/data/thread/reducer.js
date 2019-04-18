@@ -25,9 +25,13 @@ const thread = (state = initialState, action) => {
       case ACTIONS.FETCH_THREAD_LINKS_SUCCESS:
         ensure(draft.threads, forumId, {});
         action.data.threads.forEach((t, i) => {
+          ensure(draft.threads[forumId], t.id, {});
           t.order = i;
           t.page = page;
-          draft.threads[forumId][t.id] = t;
+          draft.threads[forumId][t.id] = {
+            ...draft.threads[forumId][t.id],
+            ...t
+          };
           draft.idMapped[t.id] = forumId;
         });
         draft.isFetching = false;
@@ -46,7 +50,7 @@ const thread = (state = initialState, action) => {
       case ACTIONS.FETCH_POSTS_REQUEST:
         draft.isFetching = true;
         break;
-      case ACTIONS.FETCH_POSTS_SUCCESS:
+      case ACTIONS.FETCH_POSTS_SUCCESS: {
         ensure(draft.threads, forumId);
         ensure(draft.threads[forumId], threadId);
         ensure(draft.threads[forumId][threadId], "posts", []);
@@ -56,9 +60,11 @@ const thread = (state = initialState, action) => {
         });
         const ids = draft.threads[forumId][threadId].posts.map(e => e.id);
 
-        draft.threads[forumId][threadId].posts.push(
-          ...action.data.posts.filter(e => !(e.id in ids))
+        const filtered = action.data.posts.filter(
+          e => ids.indexOf(e.id) === -1
         );
+
+        draft.threads[forumId][threadId].posts.push(...filtered);
         draft.threads[forumId][threadId].meta = {
           ...action.data.meta
         };
@@ -67,6 +73,7 @@ const thread = (state = initialState, action) => {
         draft.idMapped[threadId] = forumId;
         draft.isFetching = false;
         break;
+      }
       case ACTIONS.FETCH_POSTS_FAILURE:
         draft.isFetching = false;
         break;

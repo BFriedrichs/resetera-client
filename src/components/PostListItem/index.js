@@ -1,25 +1,22 @@
 import React from "react";
-import { View, Text } from "react-native";
-import { withNavigation } from "react-navigation";
+import { View } from "react-native";
 import styled from "styled-components/native";
 import { Card, Avatar } from "react-native-paper";
 
 import parseText from "utils/text-parser";
-import asListItem from "utils/list-item-wrapper";
+
+import { H2, H4 } from "components/Title";
 
 const PostBackground = styled(Card).attrs({
-  elevation: 5
+  elevation: 3
 })`
-  border-radius: 16px;
   margin-bottom: 24px;
   padding: 0 0 16px 0;
-  margin-left: 8px;
-  margin-right: 8px;
   background-color: ${props => props.theme.background.lighten(0.5)};
 `;
 
 const CardContent = styled(View)`
-  padding: 0 12px 12px 16px;
+  padding: 0 12px 8px 12px;
 `;
 
 const User = styled.View`
@@ -35,18 +32,6 @@ const PostInfo = styled.View`
   margin-left: 8px;
 `;
 
-const UserName = styled.Text`
-  font-size: 17px;
-  font-weight: bold;
-  color: ${props => props.theme.text};
-`;
-
-const PostDate = styled.Text`
-  font-size: 15px;
-  color: #868686;
-  color: ${props => props.theme.text};
-`;
-
 class PostListItem extends React.PureComponent {
   render() {
     const { item } = this.props;
@@ -59,8 +44,8 @@ class PostListItem extends React.PureComponent {
               source={{ uri: `https://resetera.com${item.user.avatar}` }}
             />
             <PostInfo>
-              <UserName>{item.user.name}</UserName>
-              <PostDate>{item.date}</PostDate>
+              <H2 bold>{item.user.name}</H2>
+              <H4>{item.date}</H4>
             </PostInfo>
           </User>
 

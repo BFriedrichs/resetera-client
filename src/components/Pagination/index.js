@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Picker } from "react-native";
+import { Picker } from "react-native";
 import styled from "styled-components/native";
 import { Button, Card, TextInput } from "react-native-paper";
 
@@ -90,7 +90,7 @@ class Pagination extends React.PureComponent {
                 width: 250
               }}
               selectedValue={`${pickerValue}`}
-              onValueChange={(itemValue, itemIndex) => {
+              onValueChange={(itemValue, _itemIndex) => {
                 this.setState({ pickerValue: itemValue });
               }}
             >

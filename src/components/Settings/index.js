@@ -2,12 +2,13 @@ import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import { View, Text, Animated, SafeAreaView } from "react-native";
+import { Animated, SafeAreaView } from "react-native";
 import styled from "styled-components/native";
 
 import {
   toggleSettingsDisplay,
   toggleTheme,
+  markAsRead,
   setPushActive
 } from "data/user/actions";
 import { userSelector, getSettings, getPushToken } from "data/user/selectors";
@@ -18,7 +19,6 @@ import { H1 } from "components/Title";
 import SettingsRow from "./SettingsRow";
 
 const Title = styled(H1)`
-  font-size: 30px;
   margin-bottom: 16px;
 `;
 
@@ -86,7 +86,8 @@ class Settings extends React.PureComponent {
       toggleTheme,
       setPushActive,
       settings,
-      pushToken
+      pushToken,
+      markAsRead
     } = this.props;
     const { width } = this.state;
 
@@ -112,6 +113,12 @@ class Settings extends React.PureComponent {
               }}
             />
             <SettingsRow
+              name="Mark As Read"
+              description="Visited threads will be grayed out."
+              isOn={settings.markAsRead}
+              onToggle={markAsRead}
+            />
+            <SettingsRow
               name="Dark Mode"
               description="Zzz."
               isOn={settings.darkMode}
@@ -133,7 +140,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   toggleSettingsDisplay: bindActionCreators(toggleSettingsDisplay, dispatch),
   toggleTheme: bindActionCreators(toggleTheme, dispatch),
-  setPushActive: bindActionCreators(setPushActive, dispatch)
+  setPushActive: bindActionCreators(setPushActive, dispatch),
+  markAsRead: bindActionCreators(markAsRead, dispatch)
 });
 
 export default connect(

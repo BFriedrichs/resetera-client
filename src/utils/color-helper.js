@@ -18,7 +18,7 @@ class _BetterColor {
   }
 
   toString() {
-    return this.c.hex();
+    return this.c.hsl().string();
   }
 
   adjust(ratio) {

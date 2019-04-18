@@ -3,10 +3,8 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import {
   View,
-  Text,
   Image,
-  TouchableHighlight,
-  CameraRoll,
+  TouchableOpacity,
   ActionSheetIOS,
   Dimensions,
   Animated
@@ -16,8 +14,6 @@ import { WebBrowser } from "expo";
 import { ActivityIndicator } from "react-native-paper";
 
 import { addToImageCache } from "data/thread/actions";
-import PeekView from "components/PeekView";
-import BlurOverlay from "components/BlurOverlay";
 
 import getBase64FromImageSource from "utils/image-to-base64";
 
@@ -38,7 +34,7 @@ const LoadingOverlay = styled.View`
   justify-content: center;
 `;
 
-const LoadingIndicator = ({ width, height }) => (
+const LoadingIndicator = () => (
   <LoadingOverlay>
     <ActivityIndicator animating={true} color="#ffffff" />
   </LoadingOverlay>
@@ -71,8 +67,13 @@ class RemoteImage extends React.PureComponent {
         if (this._isMounted) {
           const dims = Dimensions.get("window");
           const ar = h / w;
-          const newWidth = dims.width - 44;
-          const newHeight = newWidth * ar;
+
+          const dimWidth = dims.width - 24;
+          const isFullWidth = w > dimWidth;
+
+          const newWidth = isFullWidth ? dimWidth : w;
+          const newHeight = isFullWidth ? newWidth * ar : h;
+
           addToImageCache(src, { width: newWidth, height: newHeight });
           this.setState(
             {
@@ -103,7 +104,7 @@ class RemoteImage extends React.PureComponent {
           url: `data:image/png;base64,${data}`
         },
         err => {
-          console.log(err);
+          console.error(err);
           if (this._isMounted) {
             this.setState({ isLoadingShare: false });
           }
@@ -130,7 +131,7 @@ class RemoteImage extends React.PureComponent {
               this.openShareWithData.bind(this)(data);
             })
             .catch(err => {
-              console.log(err);
+              console.error(err);
               if (this._isMounted) {
                 this.setState({ isLoadingShare: false });
               }
@@ -141,15 +142,8 @@ class RemoteImage extends React.PureComponent {
   }
 
   render() {
-    const { src, addToImageCache } = this.props;
-    const {
-      width,
-      height,
-      sizeLoaded,
-      imageLoaded,
-      isLoadingShare,
-      radius
-    } = this.state;
+    const { src } = this.props;
+    const { width, height, isLoadingShare, radius } = this.state;
 
     const actions = {
       options: ["Cancel", "Open Image in Safari", "Save Image"],
@@ -158,7 +152,8 @@ class RemoteImage extends React.PureComponent {
 
     return (
       <View>
-        <TouchableHighlight
+        <TouchableOpacity
+          delayPressIn={20}
           onLongPress={() => {
             ActionSheetIOS.showActionSheetWithOptions(
               actions,
@@ -180,7 +175,7 @@ class RemoteImage extends React.PureComponent {
               }
             }}
           />
-        </TouchableHighlight>
+        </TouchableOpacity>
         {isLoadingShare ? <LoadingIndicator /> : null}
       </View>
     );
