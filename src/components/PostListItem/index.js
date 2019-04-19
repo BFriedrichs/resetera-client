@@ -12,7 +12,7 @@ const PostBackground = styled(Card).attrs({
 })`
   margin-bottom: 24px;
   padding: 0 0 16px 0;
-  background-color: ${props => props.theme.background.lighten(0.5)};
+  background-color: ${props => props.theme.background.intensity(0.3)};
 `;
 
 const CardContent = styled(View)`

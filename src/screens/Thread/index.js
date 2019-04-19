@@ -3,8 +3,8 @@ import { View, SectionList } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
+import { BASE_URL } from "data/constants";
 import { fetchPosts, fetchThread } from "data/thread/actions";
-
 import { addToThreadCache } from "data/user/actions";
 
 import {
@@ -27,6 +27,11 @@ const ThreadBackground = styled.View`
   display: flex;
 `;
 
+const HeaderImage = styled.Image`
+  flex: 1;
+  opacity: 0.5;
+`;
+
 const Title = styled(H1)`
   margin: 12px;
 `;
@@ -36,9 +41,23 @@ const Bottom = styled(Pagination)`
 `;
 
 class Thread extends React.PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam("title") || ""
-  });
+  static navigationOptions = ({ navigation }) => {
+    let nav = {
+      title: navigation.getParam("title") || ""
+    };
+
+    const headerImage = navigation.getParam("headerImage", null);
+    if (headerImage) {
+      nav["headerBackground"] = (
+        <HeaderImage
+          resizeMode="cover"
+          source={{ uri: BASE_URL + headerImage }}
+        />
+      );
+    }
+
+    return nav;
+  };
 
   constructor(props) {
     super(props);
@@ -55,11 +74,6 @@ class Thread extends React.PureComponent {
     const { addToThreadCache, fetchPosts, threadId, page } = this.props;
     await fetchPosts(threadId, page);
 
-    const title = this.props.navigation.getParam("title", null);
-    if (!title) {
-      this.props.navigation.setParams({ title: this.props.forum.meta.name });
-    }
-
     addToThreadCache(threadId, page);
   }
 
@@ -71,17 +85,27 @@ class Thread extends React.PureComponent {
   componentDidUpdate(prevProps) {
     const { posts, page, thread, threadId, scrollTo } = this.props;
 
-    if (!thread || prevProps.threadId !== threadId || prevProps.page !== page) {
-      if (
-        !thread ||
-        (thread && thread.meta.pages && page == thread.meta.pages) ||
-        posts.length == 0
-      ) {
-        this.setState({ fetching: true }, async () => {
-          await this.fetchNewPosts();
-          this.setState({ initialFetch: true, fetching: false });
-        });
+    if (this.state.initialFetch) {
+      const title = this.props.navigation.getParam("title", null);
+      if (!title) {
+        this.props.navigation.setParams({ title: this.props.forum.meta.name });
       }
+
+      const headerImage = this.props.navigation.getParam("headerImage", null);
+      if (thread.meta.img_url && !headerImage) {
+        this.props.navigation.setParams({ headerImage: thread.meta.img_url });
+      }
+    }
+
+    if (
+      (!thread || prevProps.threadId !== threadId || prevProps.page !== page) &&
+      ((thread && thread.meta.pages && page == thread.meta.pages) ||
+        posts.length == 0)
+    ) {
+      this.setState({ fetching: true }, async () => {
+        await this.fetchNewPosts();
+        this.setState({ initialFetch: true, fetching: false });
+      });
     }
 
     if (this.scrollView.current && scrollTo && posts.length > 0) {

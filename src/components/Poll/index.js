@@ -13,7 +13,7 @@ const PostBackground = styled(Card).attrs({
   padding: 0 0 16px 0;
   margin-left: 8px;
   margin-right: 8px;
-  background-color: ${props => props.theme.background.lighten(0.5)};
+  background-color: ${props => props.theme.background.intensity(0.3)};
 `;
 
 const CardContent = styled(View)`
@@ -26,6 +26,8 @@ const ResultsContainer = styled.View`
   margin: 16px 0;
   border-radius: 16px;
   overflow: hidden;
+  border-width: 1px;
+  border-color: ${props => props.theme.background};
 `;
 
 const ResultRow = styled.View`
@@ -33,13 +35,13 @@ const ResultRow = styled.View`
   padding: 8px 12px;
   justify-content: space-between;
   align-content: center;
-  border-bottom-color: ${props => props.theme.background.adjust(0.2)};
+  border-bottom-color: ${props => props.theme.background};
   border-bottom-width: ${props => (props.divider ? "1px" : "0")};
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.background.intensity(0.3)};
 `;
 
 const RowFill = styled.View`
-  background-color: ${props => props.theme.background.adjust(0.2)};
+  background-color: ${props => props.theme.background};
   position: absolute;
   left: 0;
   top: 0;

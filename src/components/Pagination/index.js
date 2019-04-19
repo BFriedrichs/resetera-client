@@ -9,7 +9,7 @@ const PaginationContainer = styled(Card)`
   margin: 0 8px 0 8px;
   border-radius: 16px;
   padding: 0 0 16px 0;
-  background-color: ${props => props.theme.background.lighten(0.5)};
+  background-color: ${props => props.theme.background.intensity(0.3)};
 `;
 
 const ContentContainer = styled(Card.Content)`

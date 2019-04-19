@@ -25,6 +25,11 @@ class _BetterColor {
     const newCol = this.isDark() ? this.c.lighten(ratio) : this.c.darken(ratio);
     return new _BetterColor(newCol);
   }
+
+  intensity(ratio) {
+    const newCol = this.isDark() ? this.c.darken(ratio) : this.c.lighten(ratio);
+    return new _BetterColor(newCol);
+  }
 }
 
 for (var x in Color.prototype) {
