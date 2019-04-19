@@ -5,7 +5,8 @@ import {
   Platform,
   LayoutAnimation,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableWithoutFeedback
 } from "react-native";
 import { BlurView, Constants } from "expo";
 
@@ -34,7 +35,6 @@ const Wrapper = styled.View`
 
 const AnimatedView = styled.View`
   flex: 1;
-  min-height: 200px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
 `;
 
@@ -102,7 +102,7 @@ const Body = styled(H3)`
 
 const ActionButton = styled(BlurView).attrs(props => ({
   tint: props.theme.dark ? "dark" : "light",
-  intensity: 60
+  intensity: 70
 }))`
   opacity: ${props => (props.visible ? 1 : 0)};
   height: 56px;
@@ -113,7 +113,7 @@ const ActionButton = styled(BlurView).attrs(props => ({
 `;
 
 const ButtonText = styled(H2)`
-  color: ${props => props.theme.text.adjust(1)};
+  color: ${props => props.theme.text.alpha(0.8)};
 `;
 
 const statusBarHeight = () => {
@@ -168,7 +168,7 @@ class LocalNotificationItem extends Component {
         // Press only works if not expanded
         // need to press button otherwise
         if (
-          !this.state.isExpanded &&
+          !this.state.isFurtherExpanded &&
           this.isPress(gestureState.dy, gestureState.dx)
         ) {
           this.props.onNotificationPress(this.props.itemId);
@@ -250,7 +250,15 @@ class LocalNotificationItem extends Component {
 
     return (
       <Wrapper>
-        <BackBlur isExpanded={isExpanded} width={width} height={height} />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.props.onNotificationPress(this.props.itemId);
+            this.hideNotification();
+          }}
+        >
+          <BackBlur isExpanded={isExpanded} width={width} height={height} />
+        </TouchableWithoutFeedback>
+
         <AnimatedView
           {...this._panResponder.panHandlers}
           style={{
@@ -302,10 +310,12 @@ class LocalNotificationItem extends Component {
             this.props.onNotificationPress(this.props.itemId);
             this.hideNotification();
           }}
-          activeOpacity={0.7}
+          activeOpacity={0.8}
         >
           <ActionButton visible={isFurtherExpanded}>
-            <ButtonText>{(actionText || "View Post").toUpperCase()}</ButtonText>
+            <ButtonText>
+              {(actionText || "View Content").toUpperCase()}
+            </ButtonText>
           </ActionButton>
         </TouchableOpacity>
       </Wrapper>
