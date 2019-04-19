@@ -53,7 +53,6 @@ const Title = styled(H3)`
 
 const ThreadListItem = ({
   navigation,
-  forumName,
   item,
   theme,
   divider,
@@ -62,9 +61,7 @@ const ThreadListItem = ({
 }) => (
   <TouchableDebounce
     activeOpacity={0.6}
-    onPress={() =>
-      navigation.push("Thread", { threadId: item.id, title: forumName })
-    }
+    onPress={() => navigation.push("Thread", { threadId: item.id })}
     delayPressIn={20}
   >
     <ListItemWrapper divider={divider}>

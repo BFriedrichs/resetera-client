@@ -27,6 +27,7 @@ const BackBlur = styled(BlurView).attrs(props => ({
 `;
 
 const Wrapper = styled.View`
+  z-index: ${props => (props.isExpanded ? 100 : 10)};
   position: absolute;
   top: 0;
   left: 0px;
@@ -249,10 +250,9 @@ class LocalNotificationItem extends Component {
     const { height, width } = Dimensions.get("window");
 
     return (
-      <Wrapper>
+      <Wrapper isExpanded={isExpanded}>
         <TouchableWithoutFeedback
           onPress={() => {
-            this.props.onNotificationPress(this.props.itemId);
             this.hideNotification();
           }}
         >

@@ -1,4 +1,8 @@
-export const openThread = (navigation, threadId, page, postId) => {
+export const openThread = (
+  navigation,
+  threadId,
+  { page, postId, push = false }
+) => {
   const gotoPage = page || 1;
   const currThread = navigation.getParam("threadId", false);
   const currPage = navigation.getParam("page", -1);
@@ -10,6 +14,7 @@ export const openThread = (navigation, threadId, page, postId) => {
       navigation.setParams({ page: gotoPage, postId });
     }
   } else {
-    navigation.navigate("Thread", { threadId, page: gotoPage, postId });
+    const method = push ? navigation.push : navigation.navigate;
+    method("Thread", { threadId, page: gotoPage, postId });
   }
 };

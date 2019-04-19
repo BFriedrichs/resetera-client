@@ -37,7 +37,7 @@ const Link = props => {
         onPress={async () => {
           switch (target) {
             case "thread":
-              openThread(navigation, id, page);
+              openThread(navigation, id, { page, push: true });
               break;
             case "forum":
               navigation.push("Forum", { forumId: id });
@@ -59,7 +59,7 @@ const Link = props => {
                   if (pageMatch) {
                     page = pageMatch[0].substring(5, pageMatch[0].length - 1);
                   }
-                  openThread(navigation, threadId, page, id);
+                  openThread(navigation, threadId, { page, id, push: true });
                 })
                 .catch(err => {
                   console.error(err);

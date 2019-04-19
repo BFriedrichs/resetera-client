@@ -8,7 +8,7 @@ import { fetchPosts, fetchThread } from "data/thread/actions";
 import { addToThreadCache } from "data/user/actions";
 
 import {
-  getForumIdFromThreadId,
+  getForumFromThreadId,
   selectPostsFromThread,
   selectThread
 } from "data/thread/selectors";
@@ -54,6 +54,12 @@ class Thread extends React.PureComponent {
   async fetchNewPosts() {
     const { addToThreadCache, fetchPosts, threadId, page } = this.props;
     await fetchPosts(threadId, page);
+
+    const title = this.props.navigation.getParam("title", null);
+    if (!title) {
+      this.props.navigation.setParams({ title: this.props.forum.meta.name });
+    }
+
     addToThreadCache(threadId, page);
   }
 
@@ -97,8 +103,9 @@ class Thread extends React.PureComponent {
       return;
     }
     const { navigation, thread } = this.props;
-    this.setState({ fetching: true });
-    navigation.navigate("Thread", { threadId: thread.id, page });
+    this.setState({ fetching: true }, () => {
+      navigation.navigate("Thread", { threadId: thread.id, page });
+    });
   }
 
   render() {
@@ -155,8 +162,8 @@ class Thread extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const threadId = ownProps.navigation.getParam("threadId");
   const postId = ownProps.navigation.getParam("postId");
-  const forumId = getForumIdFromThreadId(threadId)(state);
-  const thread = selectThread(forumId, threadId)(state);
+  const forum = getForumFromThreadId(threadId)(state);
+  const thread = selectThread(forum && forum.id, threadId)(state);
 
   const cachedThread = getCachedThread(threadId)(state);
   const page = ownProps.navigation.getParam(
@@ -165,6 +172,7 @@ const mapStateToProps = (state, ownProps) => {
   );
 
   return {
+    forum: forum,
     thread: thread,
     threadId: threadId,
     posts: selectPostsFromThread(threadId, page)(state),

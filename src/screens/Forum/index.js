@@ -72,8 +72,9 @@ class Forum extends React.Component {
       return;
     }
     const { navigation, forum } = this.props;
-    this.setState({ fetching: true });
-    navigation.navigate("Forum", { forumId: forum.id, page });
+    this.setState({ fetching: true }, () => {
+      navigation.navigate("Forum", { forumId: forum.id, page });
+    });
   }
 
   render() {
@@ -103,7 +104,6 @@ class Forum extends React.Component {
             renderItem={({ item, index }) => (
               <ThreadListItem
                 markAsRead={markAsRead}
-                forumName={forum.meta.name}
                 item={item}
                 cached={idCache.indexOf(item.id) !== -1}
                 divider={index !== threads.length - 1}

@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import { selectForum } from "data/forum/selectors";
 
 const threadSelector = state => state.thread.threads;
 const idMapSelector = state => state.thread.idMapped;
@@ -16,6 +17,11 @@ export const getForumIdFromThreadId = threadId =>
     idMapSelector,
     idMap => idMap[threadId] || null
   );
+
+export const getForumFromThreadId = threadId => state => {
+  const forumId = getForumIdFromThreadId(threadId)(state);
+  return selectForum(forumId)(state);
+};
 
 export const selectPostsFromThread = (threadId, page = 1) => state => {
   const forumId = getForumIdFromThreadId(threadId)(state);
