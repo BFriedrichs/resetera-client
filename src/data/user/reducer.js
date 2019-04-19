@@ -6,7 +6,11 @@ export const initialState = {
   pushToken: null,
   settings: {
     darkMode: false,
-    pushActive: true,
+    pushConfig: {
+      trending_active: true,
+      new_active: true,
+      new_threads: { "7": true }
+    },
     markAsRead: true,
     threadCache: []
   }
@@ -40,11 +44,14 @@ const user = (state = initialState, action) => {
       case ACTIONS.SET_PUSH_TOKEN:
         draft.pushToken = action.data.token;
         break;
-      case ACTIONS.SET_PUSH_ACTIVE_REQUEST:
+      case ACTIONS.SET_PUSH_CONFIG_REQUEST:
         break;
-      case ACTIONS.SET_PUSH_ACTIVE_FAILURE:
-      case ACTIONS.SET_PUSH_ACTIVE_SUCCESS:
-        draft.settings.pushActive = action.data.active;
+      case ACTIONS.SET_PUSH_CONFIG_FAILURE:
+      case ACTIONS.SET_PUSH_CONFIG_SUCCESS:
+        draft.settings.pushConfig = {
+          ...draft.settings.pushConfig,
+          ...action.data.config
+        };
         break;
     }
   });

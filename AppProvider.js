@@ -13,7 +13,8 @@ import {
   DefaultTheme
 } from "react-native-paper";
 
-import { Notifications } from "expo";
+import { Constants, Notifications } from "expo";
+import { Platform } from "react-native";
 
 import registerForPush from "utils/push-notifications";
 import Color from "utils/color-helper";
@@ -27,6 +28,7 @@ import Thread from "./src/screens/Thread";
 
 import SettingsToggle from "components/SettingsToggle";
 import Settings from "components/Settings";
+import LocalNotification from "components/LocalNotification";
 
 const UITheme = {
   palette: {
@@ -74,16 +76,32 @@ class AppProvider extends React.PureComponent {
     super(props);
 
     this.navigator = React.createRef();
+    this.notification = React.createRef();
   }
 
   _handleNotification = notification => {
-    if (notification.data.type === "trending_thread") {
+    const navigateThread = notification => {
       this.navigator.current.dispatch(
         NavigationActions.navigate({
           routeName: "Thread",
           params: { threadId: notification.data.id, page: 1 }
         })
       );
+    };
+
+    if (Platform.OS === "ios" && notification.origin === "received") {
+      this.notification.current.showNotification({
+        title: notification.data.title,
+        text: notification.data.body,
+        onPress: () => {
+          navigateThread(notification);
+        }
+      });
+    }
+    if (notification.origin === "selected") {
+      if (notification.data.type === "thread") {
+        navigateThread(notification);
+      }
     }
   };
 
@@ -99,12 +117,30 @@ class AppProvider extends React.PureComponent {
 
   render() {
     const { theme } = this.props;
+    const textStyle = {
+      color: theme.text
+    };
     return (
       <PaperThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
           <React.Fragment>
             <AppContainer ref={this.navigator} />
             <Settings />
+            <LocalNotification
+              duration={3500}
+              notificationStyle={{
+                paddingTop: 290 + Constants.statusBarHeight,
+                backgroundColor: theme.background,
+                borderColor: theme.background.darken(0.2)
+              }}
+              titleStyle={textStyle}
+              textStyle={textStyle}
+              ellipsizeTextStyle={textStyle}
+              handleStyle={{
+                backgroundColor: theme.background.adjust(1)
+              }}
+              ref={this.notification}
+            />
           </React.Fragment>
         </ThemeProvider>
       </PaperThemeProvider>

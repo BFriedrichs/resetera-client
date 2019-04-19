@@ -4,9 +4,10 @@ import { getSettings } from "data/user/selectors";
 
 const saveableActions = [
   ACTIONS.TOGGLE_THEME,
-  ACTIONS.SET_PUSH_ACTIVE_SUCCESS,
-  ACTIONS.SET_PUSH_ACTIVE_FAILURE,
-  ACTIONS.MARK_AS_READ
+  ACTIONS.SET_PUSH_CONFIG_SUCCESS,
+  ACTIONS.SET_PUSH_CONFIG_FAILURE,
+  ACTIONS.MARK_AS_READ,
+  ACTIONS.ADD_TO_THREAD_CACHE
 ];
 
 export const sessionMiddleware = store => next => action => {

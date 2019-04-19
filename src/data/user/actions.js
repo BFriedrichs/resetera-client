@@ -26,31 +26,31 @@ export const toggleSettingsDisplay = () => ({
   type: ACTIONS.TOGGLE_SETTINGS_DISPLAY
 });
 
-export const setPushActive = (token, active) => {
+export const setPushConfig = (token, config) => {
   return dispatch => {
-    dispatch(setPushActiveRequest());
+    dispatch(setPushConfigRequest());
 
-    return request(ENDPOINTS.PUSH + "/active", { token, active })
+    return request(ENDPOINTS.PUSH + "/config", { token, config })
       .then(_ => {
-        dispatch(setPushActiveSuccess(active));
+        dispatch(setPushConfigSuccess(config));
       })
       .catch(err => {
         console.error(err);
-        dispatch(setPushActiveFailure(!active));
+        dispatch(setPushConfigFailure(config));
       });
   };
 };
 
-const setPushActiveRequest = () => ({
-  type: ACTIONS.SET_PUSH_ACTIVE_REQUEST
+const setPushConfigRequest = () => ({
+  type: ACTIONS.SET_PUSH_CONFIG_REQUEST
 });
 
-const setPushActiveSuccess = active => ({
-  type: ACTIONS.SET_PUSH_ACTIVE_SUCCESS,
-  data: { active }
+const setPushConfigSuccess = config => ({
+  type: ACTIONS.SET_PUSH_CONFIG_SUCCESS,
+  data: { config }
 });
 
-const setPushActiveFailure = active => ({
-  type: ACTIONS.SET_PUSH_ACTIVE_FAILURE,
-  data: { active }
+const setPushConfigFailure = config => ({
+  type: ACTIONS.SET_PUSH_CONFIG_FAILURE,
+  data: { config }
 });

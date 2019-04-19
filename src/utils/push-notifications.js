@@ -26,12 +26,10 @@ const registerForPush = async () => {
 
   // POST the token to your backend server from where you can retrieve it to send push notifications.
   const body = {
-    token: {
-      value: token
-    }
+    token: token
   };
 
-  await request("push-token", body);
+  await request("push/register", body);
   return token;
 };
 

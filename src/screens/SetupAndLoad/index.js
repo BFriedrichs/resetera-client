@@ -2,7 +2,12 @@ import React from "react";
 import { Font, Asset } from "expo";
 import { Dimensions, StatusBar, View, Animated } from "react-native";
 
-import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  Entypo,
+  MaterialIcons,
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
 import styled from "styled-components/native";
 
 import { LogoWhite, LogoDark, Forum } from "assets";
@@ -26,7 +31,12 @@ class SetupAndLoad extends React.PureComponent {
       scale: new Animated.Value(1)
     };
 
-    this.fonts = [Ionicons.font, Entypo.font, MaterialIcons.font];
+    this.fonts = [
+      Ionicons.font,
+      Entypo.font,
+      MaterialIcons.font,
+      MaterialCommunityIcons.font
+    ];
   }
 
   _loadFonts() {
