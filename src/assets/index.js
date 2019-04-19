@@ -1,6 +1,8 @@
 export const LogoWhite = require("./logo-white.png");
 export const LogoDark = require("./logo-dark.png");
 
+export const Icon = require("./icon.png");
+
 export const Forum = {
   2: require("./forum/annoucements.png"),
   9: require("./forum/etcetera.png"),

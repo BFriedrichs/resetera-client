@@ -13,7 +13,7 @@ import {
   DefaultTheme
 } from "react-native-paper";
 
-import { Constants, Notifications } from "expo";
+import { Notifications } from "expo";
 import { Platform } from "react-native";
 
 import registerForPush from "utils/push-notifications";
@@ -128,17 +128,9 @@ class AppProvider extends React.PureComponent {
             <Settings />
             <LocalNotification
               duration={3500}
-              notificationStyle={{
-                paddingTop: 290 + Constants.statusBarHeight,
-                backgroundColor: theme.background,
-                borderColor: theme.background.darken(0.2)
-              }}
               titleStyle={textStyle}
               textStyle={textStyle}
               ellipsizeTextStyle={textStyle}
-              handleStyle={{
-                backgroundColor: theme.background.adjust(1)
-              }}
               ref={this.notification}
             />
           </React.Fragment>
