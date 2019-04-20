@@ -7,15 +7,20 @@ import {
   TouchableOpacity,
   ActionSheetIOS,
   Dimensions,
-  Animated
+  Animated,
+  Platform
 } from "react-native";
 import styled from "styled-components/native";
-import { WebBrowser } from "expo";
+import { WebBrowser, FileSystem, MediaLibrary } from "expo";
 import { ActivityIndicator } from "react-native-paper";
+
+import { connectActionSheet } from "@expo/react-native-action-sheet";
 
 import { addToImageCache } from "data/thread/actions";
 
 import getBase64FromImageSource from "utils/image-to-base64";
+
+import SafeComponent from "components/SafeComponent";
 
 const PostImage = styled(Animated.Image)`
   width: ${props => props.w || 0}px;
@@ -40,7 +45,8 @@ const LoadingIndicator = () => (
   </LoadingOverlay>
 );
 
-class RemoteImage extends React.PureComponent {
+@connectActionSheet
+class RemoteImage extends SafeComponent {
   constructor(props) {
     super(props);
 
@@ -97,25 +103,35 @@ class RemoteImage extends React.PureComponent {
     this._isMounted = false;
   }
 
-  openShareWithData(data) {
-    setTimeout(() => {
-      ActionSheetIOS.showShareActionSheetWithOptions(
-        {
-          url: `data:image/png;base64,${data}`
-        },
-        err => {
-          console.error(err);
-          if (this._isMounted) {
-            this.setState({ isLoadingShare: false });
+  async openShareWithData(data) {
+    const dataUrl = `data:image/png;base64,${data}`;
+    if (Platform.OS === "ios") {
+      setTimeout(() => {
+        ActionSheetIOS.showShareActionSheetWithOptions(
+          {
+            url: dataUrl
+          },
+          err => {
+            console.error(err);
+            if (this._isMounted) {
+              this.setState({ isLoadingShare: false });
+            }
+          },
+          () => {
+            if (this._isMounted) {
+              this.setState({ isLoadingShare: false });
+            }
           }
-        },
-        () => {
-          if (this._isMounted) {
-            this.setState({ isLoadingShare: false });
-          }
-        }
+        );
+      }, 1500);
+    } else {
+      const ext = this.props.src.split(".").pop();
+      const localUri = await FileSystem.downloadAsync(
+        dataUrl,
+        FileSystem.documentDirectory + "temp." + ext
       );
-    }, 1500);
+      await MediaLibrary.createAssetAsync(localUri);
+    }
   }
 
   handleAction(buttonIndex) {
@@ -142,12 +158,13 @@ class RemoteImage extends React.PureComponent {
   }
 
   render() {
-    const { src } = this.props;
+    const { src, showActionSheetWithOptions } = this.props;
     const { width, height, isLoadingShare, radius } = this.state;
 
     const actions = {
       options: ["Cancel", "Open Image in Safari", "Save Image"],
-      cancelButtonIndex: 0
+      cancelButtonIndex: 0,
+      title: "Image Options"
     };
 
     return (
@@ -155,10 +172,7 @@ class RemoteImage extends React.PureComponent {
         <TouchableOpacity
           delayPressIn={20}
           onLongPress={() => {
-            ActionSheetIOS.showActionSheetWithOptions(
-              actions,
-              this.handleAction.bind(this)
-            );
+            showActionSheetWithOptions(actions, this.handleAction.bind(this));
           }}
         >
           <PostImage

@@ -41,7 +41,7 @@ const LoadingIndicator = ({ width, height }) => (
   </LoadingOverlay>
 );
 
-class RemoteImage extends React.PureComponent {
+class RemoteImage extends SafeComponent {
   constructor(props) {
     super(props);
 

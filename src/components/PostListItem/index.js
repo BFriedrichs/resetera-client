@@ -5,6 +5,7 @@ import { Card, Avatar } from "react-native-paper";
 
 import parseText from "utils/text-parser";
 
+import SafeComponent from "components/SafeComponent";
 import { H2, H4 } from "components/Title";
 
 const PostBackground = styled(Card).attrs({
@@ -32,7 +33,7 @@ const PostInfo = styled.View`
   margin-left: 8px;
 `;
 
-class PostListItem extends React.PureComponent {
+class PostListItem extends SafeComponent {
   render() {
     const { item } = this.props;
     return (

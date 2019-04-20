@@ -1,11 +1,7 @@
 import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
 
 import { Animated, TouchableWithoutFeedback } from "react-native";
-import { userSelector } from "data/user/selectors";
-import { toggleSettingsDisplay } from "data/user/actions";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -14,7 +10,7 @@ const Wrapper = styled(Animated.View)`
   margin-right: 16px;
 `;
 
-class SettingsToggle extends React.Component {
+class IconButton extends React.Component {
   constructor(props) {
     super(props);
 
@@ -24,8 +20,8 @@ class SettingsToggle extends React.Component {
   }
 
   onClick() {
-    const { toggleSettingsDisplay } = this.props;
-    toggleSettingsDisplay();
+    const { onPress } = this.props;
+    onPress();
     Animated.sequence([
       Animated.timing(this.state.bounce, {
         toValue: 0.7,
@@ -39,6 +35,7 @@ class SettingsToggle extends React.Component {
   }
 
   render() {
+    const { name } = this.props;
     const { bounce } = this.state;
 
     return (
@@ -48,21 +45,11 @@ class SettingsToggle extends React.Component {
             transform: [{ scaleX: bounce }, { scaleY: bounce }]
           }}
         >
-          <Ionicons name="md-settings" size={24} color="white" />
+          <Ionicons name={name} size={24} color="white" />
         </Wrapper>
       </TouchableWithoutFeedback>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  open: userSelector(state).open
-});
-const mapDispatchToProps = dispatch => ({
-  toggleSettingsDisplay: bindActionCreators(toggleSettingsDisplay, dispatch)
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsToggle);
+export default IconButton;

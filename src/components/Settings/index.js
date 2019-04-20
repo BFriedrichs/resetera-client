@@ -20,6 +20,7 @@ import {
 } from "data/user/actions";
 import { userSelector, getSettings, getPushToken } from "data/user/selectors";
 
+import SafeComponent from "components/SafeComponent";
 import TouchableDebounce from "components/TouchableDebounce";
 import { H1, H4 } from "components/Title";
 
@@ -68,7 +69,7 @@ const EditIcon = styled(MaterialCommunityIcons).attrs(props => ({
   margin-left: 8px;
 `;
 
-class Settings extends React.PureComponent {
+class Settings extends SafeComponent {
   constructor(props) {
     super(props);
 

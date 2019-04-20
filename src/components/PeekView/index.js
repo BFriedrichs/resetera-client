@@ -1,8 +1,11 @@
 import React from "react";
-import { Platform, ActionSheetIOS, Dimensions, Animated } from "react-native";
+import { Platform, Dimensions, Animated } from "react-native";
 import styled from "styled-components/native";
 import { Surface } from "react-native-paper";
 
+import { connectActionSheet } from "@expo/react-native-action-sheet";
+
+import SafeComponent from "components/SafeComponent";
 import BlurOverlay from "components/BlurOverlay";
 
 const CardView = styled(Surface).attrs({
@@ -15,7 +18,8 @@ const CardView = styled(Surface).attrs({
   elevation: 3;
 `;
 
-class PeekView extends React.PureComponent {
+@connectActionSheet
+class PeekView extends SafeComponent {
   constructor(props) {
     super(props);
 
@@ -26,14 +30,14 @@ class PeekView extends React.PureComponent {
   }
 
   showActions() {
-    const { actions, onAction } = this.props;
+    const { actions, onAction, showActionSheetWithOptions } = this.props;
 
     if (Platform.OS === "ios") {
       const resetAction = buttonIndex => {
         onAction(buttonIndex);
         this.setState({ modalPressed: false });
       };
-      ActionSheetIOS.showActionSheetWithOptions(actions, resetAction);
+      showActionSheetWithOptions(actions, resetAction);
     }
   }
 

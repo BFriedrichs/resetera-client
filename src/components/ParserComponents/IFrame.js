@@ -5,10 +5,11 @@ import { WebBrowser } from "expo";
 
 import fetchWithTimeout from "utils/fetchWithTimeout";
 
+import SafeComponent from "components/SafeComponent";
 import Loader from "components/Loader";
 import TouchableDebounce from "components/TouchableDebounce";
 
-class IFrame extends React.PureComponent {
+class IFrame extends SafeComponent {
   constructor(props) {
     super(props);
 

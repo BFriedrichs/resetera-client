@@ -1,8 +1,9 @@
 import React from "react";
 
+import SafeComponent from "components/SafeComponent";
 import { TouchableOpacity } from "react-native";
 
-class TouchableDebounce extends React.PureComponent {
+class TouchableDebounce extends SafeComponent {
   constructor(props) {
     super(props);
 

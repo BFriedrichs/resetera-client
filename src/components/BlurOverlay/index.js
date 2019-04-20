@@ -3,6 +3,7 @@ import { View, Modal, Dimensions, KeyboardAvoidingView } from "react-native";
 import { BlurView } from "expo";
 import styled from "styled-components/native";
 
+import SafeComponent from "components/SafeComponent";
 import BetterCard from "components/BetterCard";
 
 const Centered = styled.View`
@@ -10,7 +11,7 @@ const Centered = styled.View`
   align-items: center;
 `;
 
-class BlurOverlay extends React.PureComponent {
+class BlurOverlay extends SafeComponent {
   render() {
     const {
       contentInCard,

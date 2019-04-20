@@ -11,6 +11,7 @@ import {
 import styled from "styled-components/native";
 
 import { LogoWhite, LogoDark, Forum } from "assets";
+import SafeComponent from "components/SafeComponent";
 
 StatusBar.setBarStyle("light-content");
 
@@ -22,7 +23,7 @@ const Centered = styled.View`
   height: 100%;
 `;
 
-class SetupAndLoad extends React.PureComponent {
+class SetupAndLoad extends SafeComponent {
   constructor(props) {
     super(props);
 
@@ -50,10 +51,17 @@ class SetupAndLoad extends React.PureComponent {
   }
 
   async componentDidMount() {
-    const update = await Updates.checkForUpdateAsync();
-    if (update.isAvailable) {
-      Updates.reload();
-    }
+    Updates.checkForUpdateAsync()
+      .then(update => {
+        if (update.isAvailable) {
+          Updates.reload();
+        }
+      })
+      .catch(err => {
+        if (!__DEV__) {
+          console.error(err);
+        }
+      });
 
     const { cb } = this.props;
     const { height } = Dimensions.get("window");

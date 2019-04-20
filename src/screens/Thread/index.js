@@ -1,7 +1,10 @@
 import React, { createRef } from "react";
-import { View, SectionList } from "react-native";
+import { View, SectionList, ActionSheetIOS } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+
+import { connectActionSheet } from "@expo/react-native-action-sheet";
+import { WebBrowser } from "expo";
 
 import { BASE_URL } from "data/constants";
 import { fetchPosts, fetchThread } from "data/thread/actions";
@@ -20,6 +23,9 @@ import Pagination from "components/Pagination";
 import { H1 } from "components/Title";
 import Loader from "components/Loader";
 import Poll from "components/Poll";
+
+import SafeComponent from "components/SafeComponent";
+import { SettingsButton, IconButton } from "components/IconButton";
 
 const ThreadBackground = styled.View`
   background-color: ${props => props.theme.background};
@@ -40,7 +46,8 @@ const Bottom = styled(Pagination)`
   margin-bottom: 24px;
 `;
 
-class Thread extends React.PureComponent {
+@connectActionSheet
+class Thread extends SafeComponent {
   static navigationOptions = ({ navigation }) => {
     let nav = {
       title: navigation.getParam("title") || ""
@@ -53,6 +60,51 @@ class Thread extends React.PureComponent {
           resizeMode="cover"
           source={{ uri: BASE_URL + headerImage }}
         />
+      );
+    }
+
+    const tUrl = navigation.getParam("threadUrl", null);
+    if (tUrl) {
+      const showActionSheetWithOptions = navigation.getParam(
+        "showActionSheetWithOptions"
+      );
+      const threadUrl = tUrl.startsWith(BASE_URL) ? tUrl : BASE_URL + tUrl;
+      const actions = {
+        options: ["Cancel", "Open Thread in Safari", "Share Thread"],
+        cancelButtonIndex: 0,
+        title: "Thread Options",
+        message: threadUrl
+      };
+
+      const handleAction = buttonIndex => {
+        switch (buttonIndex) {
+          case 1:
+            WebBrowser.openBrowserAsync(threadUrl);
+            break;
+          case 2:
+            ActionSheetIOS.showShareActionSheetWithOptions(
+              {
+                url: threadUrl
+              },
+              err => {
+                console.error(err);
+              },
+              () => {}
+            );
+            break;
+        }
+      };
+
+      nav["headerRight"] = (
+        <React.Fragment>
+          <IconButton
+            name="ios-share-alt"
+            onPress={() => {
+              showActionSheetWithOptions(actions, handleAction);
+            }}
+          />
+          <SettingsButton />
+        </React.Fragment>
       );
     }
 
@@ -83,7 +135,14 @@ class Thread extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { posts, page, thread, threadId, scrollTo } = this.props;
+    const {
+      posts,
+      page,
+      thread,
+      threadId,
+      scrollTo,
+      showActionSheetWithOptions
+    } = this.props;
 
     if (this.state.initialFetch) {
       const title = this.props.navigation.getParam("title", null);
@@ -94,6 +153,14 @@ class Thread extends React.PureComponent {
       const headerImage = this.props.navigation.getParam("headerImage", null);
       if (thread.meta.img_url && !headerImage) {
         this.props.navigation.setParams({ headerImage: thread.meta.img_url });
+      }
+
+      const threadUrl = this.props.navigation.getParam("threadUrl", null);
+      if (thread.meta.url && !threadUrl) {
+        this.props.navigation.setParams({
+          threadUrl: thread.meta.url,
+          showActionSheetWithOptions
+        });
       }
     }
 

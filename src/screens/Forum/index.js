@@ -8,6 +8,7 @@ import { getSettings } from "data/user/selectors";
 import { fetchThreadLinks } from "data/thread/actions";
 import { selectThreadsFromForum } from "data/thread/selectors";
 
+import SafeComponent from "components/SafeComponent";
 import ThreadListItem from "components/ThreadListItem";
 import Pagination from "components/Pagination";
 import { H1 } from "components/Title";
@@ -30,7 +31,7 @@ const Bottom = styled(Pagination)`
   margin-bottom: 24px;
 `;
 
-class Forum extends React.Component {
+class Forum extends SafeComponent {
   static navigationOptions = () => ({
     headerTitle: (
       <Image resizeMode="contain" style={{ width: 110 }} source={LogoWhite} />
@@ -44,12 +45,19 @@ class Forum extends React.Component {
       initialFetch: false,
       fetching: true
     };
+
+    this._isMounted = false;
   }
 
   async componentDidMount() {
+    this._isMounted = true;
     const { fetchThreadLinks, forum, page } = this.props;
     await fetchThreadLinks(forum.id, page);
     this.setState({ initialFetch: true, fetching: false });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   componentDidUpdate(prevProps) {

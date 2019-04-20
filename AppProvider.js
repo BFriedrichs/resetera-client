@@ -16,6 +16,8 @@ import {
 import { Notifications } from "expo";
 import { Platform } from "react-native";
 
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+
 import registerForPush from "utils/push-notifications";
 import Color from "utils/color-helper";
 
@@ -26,7 +28,8 @@ import Home from "./src/screens/Home";
 import Forum from "./src/screens/Forum";
 import Thread from "./src/screens/Thread";
 
-import SettingsToggle from "components/SettingsToggle";
+import SafeComponent from "components/SafeComponent";
+import { SettingsButton } from "components/IconButton";
 import Settings from "components/Settings";
 import LocalNotification from "components/LocalNotification";
 
@@ -64,14 +67,14 @@ const AppNavigator = createStackNavigator(
       headerTitleStyle: {
         fontWeight: "bold"
       },
-      headerRight: <SettingsToggle />
+      headerRight: <SettingsButton />
     }
   }
 );
 
 const AppContainer = createAppContainer(AppNavigator);
 
-class AppProvider extends React.PureComponent {
+class AppProvider extends SafeComponent {
   constructor(props) {
     super(props);
 
@@ -121,21 +124,23 @@ class AppProvider extends React.PureComponent {
       color: theme.text
     };
     return (
-      <PaperThemeProvider theme={theme}>
-        <ThemeProvider theme={theme}>
-          <React.Fragment>
-            <AppContainer ref={this.navigator} />
-            <Settings />
-            <LocalNotification
-              duration={3500}
-              titleStyle={textStyle}
-              textStyle={textStyle}
-              ellipsizeTextStyle={textStyle}
-              ref={this.notification}
-            />
-          </React.Fragment>
-        </ThemeProvider>
-      </PaperThemeProvider>
+      <ActionSheetProvider>
+        <PaperThemeProvider theme={theme}>
+          <ThemeProvider theme={theme}>
+            <React.Fragment>
+              <AppContainer ref={this.navigator} />
+              <Settings />
+              <LocalNotification
+                duration={3500}
+                titleStyle={textStyle}
+                textStyle={textStyle}
+                ellipsizeTextStyle={textStyle}
+                ref={this.notification}
+              />
+            </React.Fragment>
+          </ThemeProvider>
+        </PaperThemeProvider>
+      </ActionSheetProvider>
     );
   }
 }

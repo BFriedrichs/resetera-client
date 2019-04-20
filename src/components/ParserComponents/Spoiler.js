@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components/native";
 import { Button } from "react-native-paper";
 
+import SafeComponent from "components/SafeComponent";
+
 const BGView = styled.View`
   margin: 8px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -13,7 +15,7 @@ const HiddenView = styled.View`
   padding: 8px;
 `;
 
-class Spoiler extends React.PureComponent {
+class Spoiler extends SafeComponent {
   constructor(props) {
     super(props);
 

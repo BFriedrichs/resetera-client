@@ -3,6 +3,7 @@ import { Picker } from "react-native";
 import styled from "styled-components/native";
 import { Button, Card, TextInput } from "react-native-paper";
 
+import SafeComponent from "components/SafeComponent";
 import BlurOverlay from "components/BlurOverlay";
 
 const PaginationContainer = styled(Card)`
@@ -30,7 +31,7 @@ const Input = styled(TextInput)`
   bottom: 50px;
 `;
 
-class Pagination extends React.PureComponent {
+class Pagination extends SafeComponent {
   constructor(props) {
     super(props);
 

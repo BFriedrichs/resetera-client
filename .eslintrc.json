@@ -13,7 +13,8 @@
         "console": "readonly",
         "setInterval": "readonly",
         "clearInterval": "readonly",
-        "require": "readonly"
+        "require": "readonly",
+        "__DEV__": "readonly"
     },
     "parserOptions": {
         "ecmaFeatures": {
