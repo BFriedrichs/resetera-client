@@ -1,5 +1,5 @@
 import React from "react";
-import { Font, Asset } from "expo";
+import { Font, Asset, Updates } from "expo";
 import { Dimensions, StatusBar, View, Animated } from "react-native";
 
 import {
@@ -50,6 +50,11 @@ class SetupAndLoad extends React.PureComponent {
   }
 
   async componentDidMount() {
+    const update = await Updates.checkForUpdateAsync();
+    if (update.isAvailable) {
+      Updates.reload();
+    }
+
     const { cb } = this.props;
     const { height } = Dimensions.get("window");
 
