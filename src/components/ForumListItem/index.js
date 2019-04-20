@@ -36,10 +36,9 @@ const BGImage = styled.Image`
 
 const ForumListItem = ({ navigation, item }) => (
   <TouchableDebounce
-    onPress={() => {
-      console.log("aa");
-      navigation.navigate("Forum", { forumId: item.id, title: item.meta.name });
-    }}
+    onPress={() =>
+      navigation.navigate("Forum", { forumId: item.id, title: item.meta.name })
+    }
     activeOpacity={0.6}
   >
     <Card elevation={3}>
