@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import { View, SectionList, ActionSheetIOS } from "react-native";
+import { View, SectionList, ActionSheetIOS, Platform } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -69,8 +69,15 @@ class Thread extends SafeComponent {
         "showActionSheetWithOptions"
       );
       const threadUrl = tUrl.startsWith(BASE_URL) ? tUrl : BASE_URL + tUrl;
+
+      let options = ["Cancel", "Open Thread in Safari"];
+
+      if (Platform.OS === "ios") {
+        options.push("Share Thread");
+      }
+
       const actions = {
-        options: ["Cancel", "Open Thread in Safari", "Share Thread"],
+        options: options,
         cancelButtonIndex: 0,
         title: "Thread Options",
         message: threadUrl
