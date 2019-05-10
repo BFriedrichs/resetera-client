@@ -5,8 +5,13 @@ A mobile reader for Resetera powered by
 
 This app does not include any login or interactive features but rather is meant to act as a way to read and scroll through the forum.
 
-<br />
-<img src="images/forums.png" width="180"/><img src="images/settings.png" width="180"/><img src="images/threads.png" width="180"/><img src="images/post.png" width="180"/><img src="images/bright.png" width="180"/>
+<p float="left">
+<img src="images/forums.png" style="margin: 4px;" width="180"/>
+<img src="images/settings.png" style="margin: 4px;" width="180"/>
+<img src="images/threads.png" style="margin: 4px;" width="180"/>
+<img src="images/post.png" style="margin: 4px;" width="180"/>
+<img src="images/bright.png" style="margin: 4px;" width="180"/>
+</p>
 
 ## Settings
 Notifications are sent out for new trending threads or for each new topic in a forum. These can get a little much since there is a lot going on usually.
